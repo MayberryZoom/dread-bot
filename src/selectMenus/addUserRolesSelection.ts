@@ -1,4 +1,4 @@
-const { RoleSelectMenuBuilder } = require('discord.js');
+import { RoleSelectMenuBuilder } from 'discord.js';
 
 const formatRoles = (roles) => {
     if (roles.length === 1) return '@' + roles[0];
@@ -9,7 +9,7 @@ const formatRoles = (roles) => {
     }
 };
 
-module.exports = {
+export default {
     selectMenu: (id) => new RoleSelectMenuBuilder()
         .setCustomId('addUserRolesSelection_' + id)
         .setPlaceholder('Roles to add')

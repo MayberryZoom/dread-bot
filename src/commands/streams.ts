@@ -1,7 +1,7 @@
-const { SlashCommandBuilder, Collection, SlashCommandSubcommandBuilder } = require('discord.js');
-const { StreamBlacklist } = require('../databases/dbObjects.js');
+import { SlashCommandBuilder, Collection, SlashCommandSubcommandBuilder } from 'discord.js';
+import { StreamBlacklist } from '../databases/dbObjects';
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName('streams')
         .setDescription('Commands related to stream notifications'),

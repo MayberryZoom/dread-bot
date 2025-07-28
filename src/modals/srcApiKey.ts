@@ -1,6 +1,6 @@
-const axios = require('axios');
-const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
-const { srcRole } = require('../config.json');
+import { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } from 'discord.js';
+import { srcRole } from '../../config.json';
+import axios from 'axios';
 
 const apiKeyInput = new TextInputBuilder()
     .setCustomId('apiKeyInput')
@@ -11,7 +11,7 @@ const apiKeyInput = new TextInputBuilder()
 
 const apiKeyInputRow = new ActionRowBuilder().addComponents(apiKeyInput);
 
-module.exports = {
+export default {
     modal: () => new ModalBuilder()
         .setCustomId('srcApiKey')
         .setTitle('API Key Entry')

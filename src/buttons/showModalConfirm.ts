@@ -1,6 +1,6 @@
-const { ButtonBuilder, ButtonStyle } = require('discord.js');
+import { ButtonBuilder, ButtonStyle } from 'discord.js';
 
-module.exports = {
+export default {
     button: (modal) => new ButtonBuilder()
         .setCustomId('showModalConfirm_' + modal)
         .setLabel('Confirm')

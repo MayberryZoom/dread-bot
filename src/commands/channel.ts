@@ -1,7 +1,7 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
-const { moderatorRole } = require('../config.json');
+import { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
+import { moderatorRole } from '../../config.json';
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName('channel')
         .setDescription('Modifies a channel')

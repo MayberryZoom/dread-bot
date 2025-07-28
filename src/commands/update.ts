@@ -1,8 +1,11 @@
-const { SlashCommandBuilder } = require('discord.js');
-const { exec } = require('child_process');
-const execAsync = require('util').promisify(exec);
+import { exec } from 'child_process';
+import { promisify } from 'util';
 
-module.exports = {
+import { SlashCommandBuilder } from 'discord.js';
+
+const execAsync = promisify(exec);
+
+export default {
     data: new SlashCommandBuilder()
         .setName('update')
         .setDescription('Update bot/reload commands'),

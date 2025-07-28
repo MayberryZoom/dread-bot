@@ -1,7 +1,7 @@
-const { SlashCommandBuilder, PermissionFlagsBits, ActionRowBuilder } = require('discord.js');
-const { moderatorRole } = require('../config.json');
+import { SlashCommandBuilder, PermissionFlagsBits, ActionRowBuilder } from 'discord.js';
+import { moderatorRole } from '../../config.json';
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName('roles')
         .setDescription('Sets a user\'s roles')

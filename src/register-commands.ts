@@ -1,11 +1,12 @@
-const { Routes } = require('discord.js');
-const { REST } = require('@discordjs/rest');
-const { clientId } = require('./config.json');
-const { discordToken } = require('./tokens.json');
+import { REST } from "@discordjs/rest";
+import { Routes } from "discord.js";
+
+import { clientId } from '../config.json';
+import { discordToken } from '../tokens.json';
 
 const rest = new REST({ version: '10' }).setToken(discordToken);
 
-module.exports = async (commands) => {
+export default async (commands) => {
     try {
         console.log('Started refreshing application (/) commands.');
 

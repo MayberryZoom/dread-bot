@@ -1,7 +1,7 @@
-const axios = require('axios');
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, Collection, SlashCommandSubcommandGroupBuilder, SlashCommandSubcommandBuilder } = require('discord.js');
-const { wikiDomain, graphQlDomain, contributorRole } = require('../config.json');
-const { wikiToken } = require('../tokens.json');
+import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, Collection, SlashCommandSubcommandGroupBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
+import { wikiDomain, graphQlDomain, contributorRole } from '../../config.json';
+import { wikiToken } from '../../tokens.json';
+import axios from 'axios';
 
 // Initialize page index
 let pagesIndex;
@@ -156,7 +156,7 @@ const pageOption = (option) => option.setName('page').setDescription('Name of pa
 const userQuery = (id) => '{users{singleByProviderId(providerId:"' + id + '"){id,providerId,name,providerName}}}';
 const fetchUser = (id) => new Promise((resolve) => axios.get('https://' + graphQlDomain + '/graphql?query=' + userQuery(id), { headers: { 'Authorization': 'Bearer ' + wikiToken } }).then(res => resolve(res.data.data.users.singleByProviderId)));
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName('wiki')
         .setDescription('Wiki related commands'),

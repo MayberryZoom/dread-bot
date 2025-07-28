@@ -1,7 +1,7 @@
-const { ContextMenuCommandBuilder, ApplicationCommandType, PermissionFlagsBits, ActionRowBuilder } = require('discord.js');
-const { moderatorRole } = require('../config.json');
+import { ContextMenuCommandBuilder, ApplicationCommandType, PermissionFlagsBits, ActionRowBuilder } from 'discord.js';
+import { moderatorRole } from '../../config.json';
 
-module.exports = {
+export default {
     data: new ContextMenuCommandBuilder()
         .setName('Add/Remove Roles')
         .setType(ApplicationCommandType.User)

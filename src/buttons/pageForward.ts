@@ -1,4 +1,4 @@
-const { ButtonBuilder, ButtonStyle, EmbedBuilder, ActionRowBuilder } = require('discord.js');
+import { ButtonBuilder, ButtonStyle, EmbedBuilder, ActionRowBuilder } from 'discord.js';
 
 const sectionToEmbed = (section) => {
     const embed = new EmbedBuilder().setTitle(section.header);
@@ -9,21 +9,21 @@ const sectionToEmbed = (section) => {
     return embed;
 };
 
-module.exports = {
+export default {
     button: (id) => new ButtonBuilder()
-        .setCustomId('pageBack_' + id)
-        .setLabel('Previous Section')
+        .setCustomId('pageForward_' + id)
+        .setLabel('Next Section')
         .setStyle(ButtonStyle.Primary),
     component: 'wiki',
     onPressed: (interaction) => new Promise((resolve, reject) => {
-        const pageId = parseInt(interaction.customId.slice(9));
+        const pageId = parseInt(interaction.customId.slice(12));
 
         const page = client.pageCache.get(pageId).content;
         const current = page.indexOf(page.find(x => x.header === interaction.message.embeds[0].title));
 
-        const toSend = { embeds: [sectionToEmbed(page[current - 1])] };
-        if (current - 1 === 0) toSend.components = [new ActionRowBuilder().addComponents(client.buttons.get('pageBack').button(pageId).setDisabled(true), client.buttons.get('pageForward').button(pageId))];
-        else if (interaction.message.components[0].components[1].disabled) toSend.components = [new ActionRowBuilder().addComponents(client.buttons.get('pageBack').button(pageId), client.buttons.get('pageForward').button(pageId))];
+        const toSend = { embeds: [sectionToEmbed(page[current + 1])] };
+        if (page.length === current + 2) toSend.components = [new ActionRowBuilder().addComponents(client.buttons.get('pageBack').button(pageId), client.buttons.get('pageForward').button(pageId).setDisabled(true))];
+        else if (interaction.message.components[0].components[0].disabled) toSend.components = [new ActionRowBuilder().addComponents(client.buttons.get('pageBack').button(pageId), client.buttons.get('pageForward').button(pageId))];
 
         interaction.update(toSend).then(resolve()).catch(e => reject(e));
     })

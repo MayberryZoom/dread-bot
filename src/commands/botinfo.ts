@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 
 const uptime = () => {
     const days = Math.floor(client.uptime / 86400000) * 86400000;
@@ -10,7 +10,7 @@ const uptime = () => {
     return `${days / 86400000}d ${hours / 3600000}h ${minutes / 60000}m ${seconds / 1000}s ${milliseconds}ms`;
 };
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName('botinfo')
         .setDescription('Gets info about the bot'),

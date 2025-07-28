@@ -1,28 +1,33 @@
-const fs = require('fs');
-const { InteractionType, Client, Collection, GatewayIntentBits, ActivityType, Events } = require('discord.js');
-const { discordToken } = require('./tokens.json');
-const { owners, enabledComponents, dreadServer, streamsChannel, streamingRole } = require('./config.json');
-const registerCommands = require('./register-commands.js');
-const { streamEmbed } = require('./utils/activityUtils');
-const { StreamBlacklist } = require('./databases/dbObjects.js');
+import { readdirSync } from "node:fs";
+import { resolve as resolvePath } from "node:path";
+const __dirname = import.meta.dirname;
+
+import { ActivityType, Client, Collection, Events, GatewayIntentBits, InteractionType } from "discord.js";
+
+import registerCommands from "./register-commands";
+import { StreamBlacklist } from "./databases/dbObjects";
+import { streamEmbed } from "./utils/activityUtils";
+
+import { discordToken } from '../tokens.json';
+import { owners, enabledComponents, dreadServer, streamsChannel, streamingRole } from '../config.json';
 
 // Initialize client
-global.client = new Client({
+let dreadClient = new Client({
     intents: [ GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildPresences ],
     allowedMentions: { parse: ['users'], repliedUser: true },
     rest: { rejectOnRateLimit: ['/channels'] }
 });
 
 // Cache for wiki pages
-client.pageCache = new Collection();
+dreadClient.pageCache = new Collection();
 
 // Initialize local commands
-client.commands = new Collection();
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+dreadClient.commands = new Collection();
+const commandFiles = readdirSync(resolvePath(__dirname, './commands'));
 
 // Fill local commands
 for (const file of commandFiles) {
-    const command = require(`./commands/${file}`);
+    const command = await import(`./commands/${file}`);
     if (command.subcommandGroups) {
         command.subcommandGroups.forEach((v, k) => {
             v.subcommands.forEach((vv, kk) => enabledComponents.includes(vv.component) ? v.data.addSubcommand(vv.data) : v.data.delete(kk));
@@ -30,57 +35,58 @@ for (const file of commandFiles) {
         });
     }
     if (command.subcommands) command.subcommands.forEach((v, k) => enabledComponents.includes(v.component) ? command.data.addSubcommand(v.data) : command.subcommands.delete(k));
-    if (enabledComponents.includes(command.component)) client.commands.set(command.data.name, command);
+    if (enabledComponents.includes(command.component)) dreadClient.commands.set(command.data.name, command);
 }
 
 // Initialize local context menus
-client.contextMenus = new Collection();
-const contextMenus = fs.readdirSync('./contextMenus').filter(file => file.endsWith('.js'));
+dreadClient.contextMenus = new Collection();
+const contextMenus = readdirSync(resolvePath(__dirname, './contextMenus'));
 
 // Fill local context menus
 for (const file of contextMenus) {
-    const contextMenu = require(`./contextMenus/${file}`);
-    if (enabledComponents.includes(contextMenu.component)) client.contextMenus.set(contextMenu.data.name, contextMenu);
+    const contextMenu = await import(`./contextMenus/${file}`);
+    if (enabledComponents.includes(contextMenu.component)) dreadClient.contextMenus.set(contextMenu.data.name, contextMenu);
 }
 
 // Initialize local modals
-client.modals = new Collection();
-const modalFiles = fs.readdirSync('./modals').filter(file => file.endsWith('.js'));
+dreadClient.modals = new Collection();
+const modalFiles = readdirSync(resolvePath(__dirname, './modals'));
 
 // Fill local modals
 for (const file of modalFiles) {
-    const modal = require(`./modals/${file}`);
-    if (enabledComponents.includes(modal.component)) client.modals.set(file.slice(0, -3), modal);
+    const modal = await import(`./modals/${file}`);
+    if (enabledComponents.includes(modal.component)) dreadClient.modals.set(file.slice(0, -3), modal);
 }
 
 // Initialize local buttons
-client.buttons = new Collection();
-const buttonFiles = fs.readdirSync('./buttons').filter(file => file.endsWith('.js'));
+dreadClient.buttons = new Collection();
+const buttonFiles = readdirSync(resolvePath(__dirname, './buttons'));
 
 // Fill local buttons
 for (const file of buttonFiles) {
-    const button = require(`./buttons/${file}`);
-    if (enabledComponents.includes(button.component)) client.buttons.set(file.slice(0, -3), button);
+    const button = await import(`./buttons/${file}`);
+    if (enabledComponents.includes(button.component)) dreadClient.buttons.set(file.slice(0, -3), button);
 }
 
 // Initialize local select menus
-client.selectMenus = new Collection();
-const selectMenuFiles = fs.readdirSync('./selectMenus').filter(file => file.endsWith('.js'));
+dreadClient.selectMenus = new Collection();
+const selectMenuFiles = readdirSync(resolvePath(__dirname, './selectMenus'));
 
 // Fill local select menus
 for (const file of selectMenuFiles) {
-    const selectMenu = require(`./selectMenus/${file}`);
-    if (enabledComponents.includes(selectMenu.component)) client.selectMenus.set(file.slice(0, -3), selectMenu);
+    const selectMenu = await import(`./selectMenus/${file}`);
+    if (enabledComponents.includes(selectMenu.component)) dreadClient.selectMenus.set(file.slice(0, -3), selectMenu);
 }
 
-registerCommands(client.commands.map(c => c.data).concat(client.contextMenus.map(c => c.data)));
+console.log(dreadClient.commands);
+registerCommands(dreadClient.commands.map(c => c.data).concat(dreadClient.contextMenus.map(c => c.data)));
 
 // Interaction handler
-client.on(Events.InteractionCreate, interaction => {
+dreadClient.on(Events.InteractionCreate, interaction => {
     // Slash commands
     if (interaction.isChatInputCommand()) {
         // Get local equivalent and find subcommand
-        let command = client.commands.get(interaction.commandName);
+        let command = dreadClient.commands.get(interaction.commandName);
         if (command.subcommandGroups && interaction.options.getSubcommandGroup(false)) command = command.subcommandGroups.get(interaction.options.getSubcommandGroup()).subcommands.get(interaction.options.getSubcommand());
         else if (command.subcommands && interaction.options.getSubcommand(false)) command = command.subcommands.get(interaction.options.getSubcommand());
 
@@ -96,7 +102,7 @@ client.on(Events.InteractionCreate, interaction => {
     // Autocomplete
     else if (interaction.isAutocomplete()) {
         // Get local equivalent
-        let command = client.commands.get(interaction.commandName);
+        let command = dreadClient.commands.get(interaction.commandName);
         if (command.subcommandGroups && interaction.options.getSubcommandGroup(false)) command = command.subcommandGroups.get(interaction.options.getSubcommandGroup()).subcommands.get(interaction.options.getSubcommand());
         else if (command.subcommands && interaction.options.getSubcommand(false)) command = command.subcommands.get(interaction.options.getSubcommand());
 
@@ -109,7 +115,7 @@ client.on(Events.InteractionCreate, interaction => {
     // Context menus
     else if (interaction.isUserContextMenuCommand()) {
         // Get local equivalent
-        const contextMenu = client.contextMenus.get(interaction.commandName);
+        const contextMenu = dreadClient.contextMenus.get(interaction.commandName);
 
         // Restrict owner only commands (probably unnecessary feature)
         if (contextMenu.ownerOnly && !owners.includes(interaction.user.id)) return interaction.reply({ content: 'Only the bot owners can use this command!', ephemeral: true });
@@ -124,7 +130,7 @@ client.on(Events.InteractionCreate, interaction => {
     else if (interaction.type === InteractionType.ModalSubmit) {
         // Get local equivalent
         const pos = interaction.customId.indexOf('_');
-        const modal = client.modals.get(pos === -1 ? interaction.customId : interaction.customId.slice(0, pos));
+        const modal = dreadClient.modals.get(pos === -1 ? interaction.customId : interaction.customId.slice(0, pos));
 
         // Execute command
         modal.onSubmit(interaction).catch(error => {
@@ -136,7 +142,7 @@ client.on(Events.InteractionCreate, interaction => {
     else if (interaction.isButton()) {
         // Get local equivalent
         const pos = interaction.customId.indexOf('_');
-        const button = client.buttons.get(pos === -1 ? interaction.customId : interaction.customId.slice(0, pos));
+        const button = dreadClient.buttons.get(pos === -1 ? interaction.customId : interaction.customId.slice(0, pos));
 
         // Execute command
         button.onPressed(interaction).catch(error => {
@@ -148,7 +154,7 @@ client.on(Events.InteractionCreate, interaction => {
     else if (interaction.isAnySelectMenu()) {
         // Get local equivalent
         const pos = interaction.customId.indexOf('_');
-        const selectMenu = client.selectMenus.get(pos === -1 ? interaction.customId : interaction.customId.slice(0, pos));
+        const selectMenu = dreadClient.selectMenus.get(pos === -1 ? interaction.customId : interaction.customId.slice(0, pos));
 
         // Execute command
         selectMenu.onSelection(interaction).catch(error => {
@@ -164,7 +170,7 @@ if (enabledComponents.includes('streams')) {
         else return arr1.every((x, i) => JSON.stringify(x) === JSON.stringify(arr2[i]));
     };
 
-    client.on(Events.PresenceUpdate, async (oldPresence, newPresence) => {
+    dreadClient.on(Events.PresenceUpdate, async (oldPresence, newPresence) => {
         if (newPresence.guild.id !== dreadServer) return;
         const streams = newPresence.activities.filter(activity => activity.type === ActivityType.Streaming && activity.state === 'Metroid Dread');
         if (streams.length > 0) {
@@ -172,7 +178,7 @@ if (enabledComponents.includes('streams')) {
                 const user = await StreamBlacklist.findOne({ where: { userId: newPresence.user.id } });
                 if (!user) {
                     streams.forEach(stream => {
-                        client.channels.fetch(streamsChannel)
+                        dreadClient.channels.fetch(streamsChannel)
                             .then(c => c.send({ embeds: [streamEmbed(stream, newPresence.user)] }));
                     });
                     newPresence.member.roles.add(streamingRole);
@@ -186,9 +192,9 @@ if (enabledComponents.includes('streams')) {
 }
 
 // Log on successful login
-client.once(Events.ClientReady, () => {
+dreadClient.once(Events.ClientReady, () => {
     console.log('Interaction handling ready!');
 });
 
 // Login
-client.login(discordToken);
+dreadClient.login(discordToken);

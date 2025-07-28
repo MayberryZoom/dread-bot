@@ -1,4 +1,4 @@
-const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
+import { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } from 'discord.js';
 
 const topicInput = new TextInputBuilder()
     .setCustomId('channelTopicTopic')
@@ -9,7 +9,7 @@ const topicInput = new TextInputBuilder()
 
 const topicActionRow = new ActionRowBuilder().addComponents(topicInput);
 
-module.exports = {
+export default {
     modal: (id) => new ModalBuilder()
         .setCustomId('channelTopic_' + id)
         .setTitle('New Channel Topic')

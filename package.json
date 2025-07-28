@@ -2,11 +2,12 @@
   "name": "dread-bot",
   "version": "2.4.1",
   "description": "A Discord bot specifically made for the Metroid Dread speedrunning [Discord server](https://discord.gg/BdmYr5TRGT).",
-  "main": "dread-bot.js",
+  "main": "src/dread-bot.ts",
   "scripts": {},
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "type": "module",
   "dependencies": {
     "@discordjs/rest": "^1.0.1",
     "axios": "^0.27.2",
@@ -15,7 +16,11 @@
     "sqlite3": "^5.0.11"
   },
   "devDependencies": {
-    "eslint": "^8.51.0"
+    "@types/node": "^24.1.0",
+    "eslint": "^8.51.0",
+    "nodemon": "^3.1.10",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
   },
   "repository": {
     "type": "git",

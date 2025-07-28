@@ -6,24 +6,6 @@ const registerCommands = require('./register-commands.js');
 const { streamEmbed } = require('./utils/activityUtils');
 const { StreamBlacklist } = require('./databases/dbObjects.js');
 
-// Temp storage for 2 part forms
-global.wipForms = [];
-
-global.removeWipForm = (form, timeout) => {
-    if (timeout) clearTimeout(form.timeout);
-    return wipForms.splice(wipForms.indexOf(form), 1);
-};
-
-global.addWipForm = (form) => {
-    const existingForm = wipForms.findIndex(x => x.id === form.id);
-    form.timeout = setTimeout(() => removeWipForm(this), 900000);
-
-    if (existingForm === -1) {
-        return wipForms.push(form);
-    }
-    else wipForms[existingForm] = form;
-};
-
 // Initialize client
 global.client = new Client({
     intents: [ GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildPresences ],

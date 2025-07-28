@@ -46,9 +46,6 @@
         "template-curly-spacing": "error"
     },
     "globals": {
-        "client": "writable",
-        "wipForms": "writable",
-        "addWipForm": "readonly",
-        "removeWipForm": "readonly"
+        "client": "writable"
     }
 }

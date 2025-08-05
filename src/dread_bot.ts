@@ -62,20 +62,21 @@ dreadClient.on(Events.PresenceUpdate, async (oldPresence, newPresence) => {
         || !newPresence.user
         || !newPresence.member
     ) return;
-    const streams = newPresence.activities.filter(activity => activity.type === ActivityType.Streaming && activity.state === "Metroid Dread");
-    if (streams.length > 0) {
-        if (!oldPresence || !objectsArrayEquals(streams, oldPresence.activities.filter(activity => activity.type === ActivityType.Streaming && activity.state === "Metroid Dread"))) {
+    const newStreams = newPresence.activities.filter(activity => activity.type === ActivityType.Streaming && activity.state === "Metroid Dread");
+    const oldStreams = oldPresence?.activities.filter(activity => activity.type === ActivityType.Streaming && activity.state === "Metroid Dread") || [];
+    if (newStreams.length > 0) {
+        if (!oldPresence || !objectsArrayEquals(newStreams, oldStreams)) {
             const user = await StreamBlacklist.findOne({ where: { userId: newPresence.user.id } });
             if (!user) {
-                streams.forEach(async (stream) => {
+                newStreams.forEach(async (stream) => {
                     const channel = await dreadClient.channels.fetch(streamsChannel);
-                    if (channel?.isSendable()) channel.send({ embeds: [streamEmbed(stream, newPresence.user)] });
+                    if (channel?.isSendable() && newPresence.user) channel.send({ embeds: [streamEmbed(stream, newPresence.user)] });
                 });
                 newPresence.member.roles.add(streamingRole);
             }
         }
     }
-    else if (oldPresence && oldPresence.activities.filter(activity => activity.type === ActivityType.Streaming && activity.state === "Metroid Dread").length > 0) {
+    else if (oldStreams.length > 0) {
         newPresence.member.roles.remove(streamingRole);
     }
 });

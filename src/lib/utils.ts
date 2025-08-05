@@ -3,7 +3,7 @@ import { resolve as resolvePath } from "node:path";
 import { pathToFileURL } from "node:url";
 const __dirname = import.meta.dirname;
 
-import { Collection, EmbedBuilder } from "discord.js";
+import { Activity, Collection, EmbedBuilder, User } from "discord.js";
 
 import { ComponentManager } from "./component_manager";
 
@@ -70,13 +70,13 @@ export const pageSectionEmbed = (section: PageSection) => {
     return embed;
 };
 
-export const streamEmbed = (activity, user) => new EmbedBuilder()
-    .setAuthor({ name: user.username + " is now live!", iconURL: user.avatarURL(), url: activity.url })
+export const streamEmbed = (activity: Activity, user: User) => new EmbedBuilder()
+    .setAuthor({ name: user.username + " is now live!", iconURL: user.avatarURL() || undefined, url: activity.url || undefined })
     .setTitle(activity.details)
     .setURL(activity.url)
-    .setImage(activity.assets.largeImageURL());
+    .setImage(activity.assets?.largeImageURL() || null);
 
-    export const objectsArrayEquals = (arr1, arr2) => {
+export const objectsArrayEquals = (arr1: unknown[], arr2: unknown[]) => {
     if (arr1.length !== arr2.length) return false;
     else return arr1.every((x, i) => JSON.stringify(x) === JSON.stringify(arr2[i]));
 };

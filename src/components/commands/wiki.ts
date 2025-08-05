@@ -208,7 +208,7 @@ export default new Command({
                         // Search page index and return if no page found
                         let page = pagesIndex.find(p => p.title.toLowerCase() === interaction.options.getString("page", true).toLowerCase());
                         if (!page) {
-                            interaction.reply({ content: "No page found!", flags: MessageFlags.Ephemeral });
+                            interaction.reply({ content: "No page found.", flags: MessageFlags.Ephemeral });
                             return;
                         }
 
@@ -230,7 +230,7 @@ export default new Command({
                         // Search page index and return if no page found
                         let page = pagesIndex.find(p => p.title.toLowerCase() === interaction.options.getString("page", true).toLowerCase());
                         if (!page) {
-                            interaction.reply({ content: "No page found!", flags: MessageFlags.Ephemeral });
+                            interaction.reply({ content: "No page found.", flags: MessageFlags.Ephemeral });
                             return;
                         }
 
@@ -266,18 +266,18 @@ export default new Command({
                 await interaction.guild.roles.fetch();
 
                 if (interaction.member.roles.cache.has(contributorRole)) {
-                    interaction.reply({ content: "You already have the contributor role!", flags: MessageFlags.Ephemeral });
+                    interaction.reply({ content: "You already have the contributor role.", flags: MessageFlags.Ephemeral });
                     return;
                 }
 
                 const user = await fetchUser(interaction.user.id);
                 if (!user) {
-                    interaction.reply({ content: "No user found!", flags: MessageFlags.Ephemeral })
+                    interaction.reply({ content: "No user found.", flags: MessageFlags.Ephemeral })
                     return;
                 }
 
                 await interaction.member.roles.add(contributorRole);
-                interaction.reply("User found! You should now have the contributor role.");
+                interaction.reply("User found. Contributor role successfully added.");
             }
         }),
     ],

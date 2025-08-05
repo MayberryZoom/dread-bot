@@ -18,7 +18,7 @@ const models = Object.values(dbModels).map(createModelFunction => createModelFun
 const force = process.argv.includes("--force") || process.argv.includes("-f");
 
 sequelize.sync({ force }).then(() => {
-    console.log("Database synced!");
+    console.log("Database synced.");
     console.log(models);
 
     sequelize.close();

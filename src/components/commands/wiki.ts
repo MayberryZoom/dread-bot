@@ -1,5 +1,5 @@
 import axios from "axios";
-import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandSubcommandBuilder, AutocompleteInteraction, InteractionReplyOptions, Collection, MessageFlags } from "discord.js";
+import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandSubcommandBuilder, AutocompleteInteraction, InteractionReplyOptions, Collection, MessageFlags, ButtonBuilder } from "discord.js";
 
 import { Command, Subcommand, SubcommandGroup } from "../../lib/command";
 import { PageSubsection, PageSection, CachedPage } from "../../lib/utils";
@@ -241,7 +241,7 @@ export default new Command({
                         // Construct embed
                         const toSend: InteractionReplyOptions = { embeds: [sectionToEmbed(page.content[0])] };
                         // If page has multiple sections, add buttons to tab through sections
-                        if (page.content.length > 1) toSend.components = [new ActionRowBuilder().addComponents(
+                        if (page.content.length > 1) toSend.components = [new ActionRowBuilder<ButtonBuilder>().addComponents(
                             manager.createButton("pageBack", pageId).setDisabled(true),
                             manager.createButton("pageForward", pageId)
                         )];

@@ -1,6 +1,7 @@
 import { SlashCommandBuilder, PermissionFlagsBits, ActionRowBuilder, MessageFlags } from "discord.js";
 
 import { Command } from "../../lib/command";
+import { SelectMenuBuilder } from "../../lib/select_menu";
 
 
 export default new Command({
@@ -16,8 +17,8 @@ export default new Command({
     moderatorOnly: true,
     execute: async (interaction, manager) => {
         const user = interaction.options.getUser("user");
-        const addRoleSelection = new ActionRowBuilder().addComponents(manager.createSelectMenu("addUserRolesSelection", user.id));
-        const removeRoleSelection = new ActionRowBuilder().addComponents(manager.createSelectMenu("removeUserRolesSelection", user.id));
+        const addRoleSelection = new ActionRowBuilder<SelectMenuBuilder>().addComponents(manager.createSelectMenu("addUserRolesSelection", user.id));
+        const removeRoleSelection = new ActionRowBuilder<SelectMenuBuilder>().addComponents(manager.createSelectMenu("removeUserRolesSelection", user.id));
 
         await interaction.reply({ content: "Select " + user.toString() + "'s roles." , components: [addRoleSelection, removeRoleSelection], flags: MessageFlags.Ephemeral });
     },

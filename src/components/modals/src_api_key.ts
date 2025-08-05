@@ -13,7 +13,7 @@ const apiKeyInput = new TextInputBuilder()
     .setMaxLength(1024)
     .setRequired(true);
 
-const apiKeyInputRow = new ActionRowBuilder().addComponents(apiKeyInput);
+const apiKeyInputRow = new ActionRowBuilder<TextInputBuilder>().addComponents(apiKeyInput);
 
 export default new Modal({
     name: "srcApiKey",

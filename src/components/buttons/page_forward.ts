@@ -18,12 +18,12 @@ export default new Button({
         if (!currentPage) throw Error();
         const currentIndex = page.indexOf(currentPage);
 
-        const toSend: InteractionUpdateOptions = { embeds: [pageSectionEmbed(page[current + 1])] };
-        if (page.length === currentIndex + 2) toSend.components = [new ActionRowBuilder().addComponents(
+        const toSend: InteractionUpdateOptions = { embeds: [pageSectionEmbed(page[currentIndex + 1])] };
+        if (page.length === currentIndex + 2) toSend.components = [new ActionRowBuilder<ButtonBuilder>().addComponents(
             manager.createButton("pageBack", pageId),
             manager.createButton("pageForward", pageId).setDisabled(true)
         )];
-        else if (interaction.message.components[0].components[0].disabled) toSend.components = [new ActionRowBuilder().addComponents(
+        else if (interaction.message.resolveComponent(`pageBack_${pageId}`)?.disabled) toSend.components = [new ActionRowBuilder<ButtonBuilder>().addComponents(
             manager.createButton("pageBack", pageId),
             manager.createButton("pageForward", pageId)
         )];

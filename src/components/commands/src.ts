@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ActionRowBuilder, SlashCommandSubcommandBuilder, MessageFlags } from "discord.js";
+import { SlashCommandBuilder, ActionRowBuilder, SlashCommandSubcommandBuilder, MessageFlags, ButtonBuilder } from "discord.js";
 
 import { Command, Subcommand } from "../../lib/command";
 
@@ -27,7 +27,7 @@ export default new Command({
                     return;
                 }
 
-                const buttonRow = new ActionRowBuilder().addComponents(manager.createButton("showModalConfirm", "srcApiKey"));
+                const buttonRow = new ActionRowBuilder<ButtonBuilder>().addComponents(manager.createButton("showModalConfirm", "srcApiKey"));
                 interaction.reply({ content: apiKeyWarning, components: [buttonRow], flags: MessageFlags.Ephemeral });
             }
         })

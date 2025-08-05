@@ -10,7 +10,7 @@ const topicInput = new TextInputBuilder()
     .setMaxLength(1024)
     .setRequired(true);
 
-const topicActionRow = new ActionRowBuilder().addComponents(topicInput);
+const topicActionRow = new ActionRowBuilder<TextInputBuilder>().addComponents(topicInput);
 
 export default new Modal({
     name: "channelTopic",

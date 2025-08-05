@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, PermissionFlagsBits, SlashCommandSubcommandBuilder, MessageFlags, ChannelType, SlashCommandChannelOption } from "discord.js";
+import { SlashCommandBuilder, PermissionFlagsBits, SlashCommandSubcommandBuilder, MessageFlags, ChannelType, SlashCommandChannelOption, InteractionContextType } from "discord.js";
 
 import { Command, Subcommand } from "../../lib/command";
 
@@ -7,7 +7,10 @@ const channelOption = () => new SlashCommandChannelOption().setName("channel").s
 
 export default new Command({
     name: "channel",
-    builder: new SlashCommandBuilder().setDescription("Modifies a channel").setDefaultMemberPermissions(PermissionFlagsBits.ViewAuditLog).setDMPermission(false),
+    builder: new SlashCommandBuilder()
+        .setDescription("Modifies a channel")
+        .setDefaultMemberPermissions(PermissionFlagsBits.ViewAuditLog)
+        .setContexts(InteractionContextType.Guild),
     subcommands: [
         new Subcommand({
             name: "slowmode",

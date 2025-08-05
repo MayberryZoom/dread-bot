@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, PermissionFlagsBits, ActionRowBuilder, MessageFlags } from "discord.js";
+import { SlashCommandBuilder, PermissionFlagsBits, ActionRowBuilder, MessageFlags, InteractionContextType } from "discord.js";
 
 import { Command } from "../../lib/command";
 import { SelectMenuBuilder } from "../../lib/select_menu";
@@ -8,7 +8,7 @@ export default new Command({
     name: "roles",
     builder: new SlashCommandBuilder()
         .setDefaultMemberPermissions(PermissionFlagsBits.ViewAuditLog)
-        .setDMPermission(false)
+        .setContexts(InteractionContextType.Guild)
         .addUserOption(option => option
             .setName("user")
             .setDescription("The user to update the roles of"))

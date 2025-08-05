@@ -259,7 +259,10 @@ export default new Command({
             name: "verify",
             builder: new SlashCommandSubcommandBuilder().setDescription("Verify your wiki account"),
             execute: async (interaction) => {
-                if (!interaction.inCachedGuild()) return;
+                if (!interaction.inCachedGuild()) {
+                    interaction.reply({ content: "That command can't be used in DMs.", flags: MessageFlags.Ephemeral });
+                    return;
+                }
                 await interaction.guild.roles.fetch();
 
                 if (interaction.member.roles.cache.has(contributorRole)) {

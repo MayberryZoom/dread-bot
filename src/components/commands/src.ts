@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ActionRowBuilder, SlashCommandSubcommandBuilder, MessageFlags, ButtonBuilder } from "discord.js";
+import { SlashCommandBuilder, ActionRowBuilder, SlashCommandSubcommandBuilder, MessageFlags, ButtonBuilder, InteractionContextType } from "discord.js";
 
 import { Command, Subcommand } from "../../lib/command";
 
@@ -15,7 +15,7 @@ If you still don't feel comfortable sharing your API key, feel free to dismiss t
 
 export default new Command({
     name: "src",
-    builder: new SlashCommandBuilder().setDescription("Verify your accounts on external services"),
+    builder: new SlashCommandBuilder().setDescription("Verify your accounts on external services").setContexts(InteractionContextType.Guild),
     subcommands: [
         new Subcommand({
             name: "verify",

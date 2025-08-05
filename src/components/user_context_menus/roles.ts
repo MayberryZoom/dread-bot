@@ -1,4 +1,4 @@
-import { ContextMenuCommandBuilder, ApplicationCommandType, PermissionFlagsBits, ActionRowBuilder, MessageFlags } from "discord.js";
+import { ContextMenuCommandBuilder, ApplicationCommandType, PermissionFlagsBits, ActionRowBuilder, MessageFlags, InteractionContextType } from "discord.js";
 
 import { UserContextMenu } from "../../lib/context_menu";
 import { SelectMenuBuilder } from "../../lib/select_menu";
@@ -9,7 +9,7 @@ export default new UserContextMenu({
     builder: new ContextMenuCommandBuilder()
         .setType(ApplicationCommandType.User)
         .setDefaultMemberPermissions(PermissionFlagsBits.ViewAuditLog)
-        .setDMPermission(false),
+        .setContexts(InteractionContextType.Guild),
     moderatorOnly: true,
     execute: async (interaction, manager) => {
         const addRoleSelection = new ActionRowBuilder<SelectMenuBuilder>().addComponents(manager.createSelectMenu("addUserRolesSelection", interaction.targetUser.id));

@@ -12,11 +12,10 @@ export default new Command({
         .setDMPermission(false)
         .addUserOption(option => option
             .setName("user")
-            .setDescription("The user to update the roles of.")
-            .setRequired(true)),
+            .setDescription("The user to update the roles of.")),
     moderatorOnly: true,
     execute: async (interaction, manager) => {
-        const user = interaction.options.getUser("user");
+        const user = interaction.options.getUser("user") || interaction.user;
         const addRoleSelection = new ActionRowBuilder<SelectMenuBuilder>().addComponents(manager.createSelectMenu("addUserRolesSelection", user.id));
         const removeRoleSelection = new ActionRowBuilder<SelectMenuBuilder>().addComponents(manager.createSelectMenu("removeUserRolesSelection", user.id));
 

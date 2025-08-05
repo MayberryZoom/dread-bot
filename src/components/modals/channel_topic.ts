@@ -19,9 +19,14 @@ export default new Modal({
         .setTitle("New Channel Topic")
         .addComponents(topicActionRow),
     execute: async (interaction) => {
+        if (!interaction.inCachedGuild()) return;
+
         const id = interaction.customId.slice(13);
         const newTopic = interaction.fields.getTextInputValue("channelTopicTopic");
-        const res = await interaction.guild.channels.cache.get(id).setTopic(newTopic, `Channel topic set to ${newTopic} by ${interaction.user.username}.`);
-        if (res) interaction.reply({ content: "Channel updated successfully.", flags: MessageFlags.Ephemeral });
+        const channel = interaction.guild.channels.cache.get(id)
+        if (!channel || !channel.isTextBased() || channel.isThread() || channel.isVoiceBased()) throw Error(`Invalid channel ${id}.`)
+
+        await channel.setTopic(newTopic, `Channel topic set to ${newTopic} by ${interaction.user.username}.`);
+        interaction.reply({ content: "Channel updated successfully.", flags: MessageFlags.Ephemeral });
     }
 });

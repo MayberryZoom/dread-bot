@@ -1,9 +1,9 @@
-import { SlashCommandBuilder, PermissionFlagsBits, SlashCommandSubcommandBuilder, MessageFlags } from "discord.js";
+import { SlashCommandBuilder, PermissionFlagsBits, SlashCommandSubcommandBuilder, MessageFlags, ChannelType, SlashCommandChannelOption } from "discord.js";
 
 import { Command, Subcommand } from "../../lib/command";
 
 
-const channelOption = (option) => option.setName("channel").setDescription("The channel to update");
+const channelOption = () => new SlashCommandChannelOption().setName("channel").setDescription("The channel to update");
 
 export default new Command({
     name: "channel",
@@ -19,15 +19,15 @@ export default new Command({
                     .setMinValue(0)
                     .setMaxValue(216000)
                     .setRequired(true))
-                .addChannelOption(channelOption),
+                .addChannelOption(channelOption().addChannelTypes(ChannelType.GuildText)),
             moderatorOnly: true,
             execute: async (interaction) => {
-                let channel = interaction.options.getChannel("channel");
-                if (!channel) channel = interaction.channel;
+                const channel = interaction.options.getChannel("channel", false, [ChannelType.GuildText]) || interaction.channel;
+                if (!channel || channel.isDMBased()) return;
 
-                const cd = interaction.options.getNumber("cooldown");
-                const res = await channel.setRateLimitPerUser(cd, "Slowmode set to " + cd + " seconds by " + interaction.user.username + ".");
-                if (res) interaction.reply({ content: "Channel updated successfully.", flags: MessageFlags.Ephemeral });
+                const cd = interaction.options.getNumber("cooldown", true);
+                await channel.setRateLimitPerUser(cd, `Slowmode set to ${cd} seconds by ${interaction.user.username}.`);
+                interaction.reply({ content: "Channel updated successfully.", flags: MessageFlags.Ephemeral });
             },
         }),
         new Subcommand({
@@ -40,15 +40,15 @@ export default new Command({
                     .setMinLength(1)
                     .setMaxLength(100)
                     .setRequired(true))
-                .addChannelOption(channelOption),
+                .addChannelOption(channelOption().addChannelTypes(ChannelType.GuildText)),
             moderatorOnly: true,
             execute: async (interaction) => {
-                let channel = interaction.options.getChannel("channel");
-                if (!channel) channel = interaction.channel;
+                const channel = interaction.options.getChannel("channel", false, [ChannelType.GuildText]) || interaction.channel;
+                if (!channel || channel.isDMBased()) return;
 
-                const newName = interaction.options.getString("name");
-                const res = await channel.setName(newName, "Channel name changed to #" + newName + " by " + interaction.user.username + ".");
-                if (res) interaction.reply({ content: "Channel updated successfully.", flags: MessageFlags.Ephemeral });
+                const newName = interaction.options.getString("name", true);
+                if (interaction.inGuild()) await channel.setName(newName, `Channel name changed to #${newName} by ${interaction.user.username}.`);
+                interaction.reply({ content: "Channel updated successfully.", flags: MessageFlags.Ephemeral });
             },
         }),
         new Subcommand({
@@ -58,8 +58,8 @@ export default new Command({
                 .addChannelOption(channelOption),
             moderatorOnly: true,
             execute: async (interaction, manager) => {
-                let channel = interaction.options.getChannel("channel");
-                if (!channel) channel = interaction.channel;
+                const channel = interaction.options.getChannel("channel", false, [ChannelType.GuildText]) || interaction.channel;
+                if (!channel || channel.isDMBased()) return;
 
                 interaction.showModal(manager.createModal("channelTopic", channel.id));
             },

@@ -12,7 +12,7 @@ export default new SelectMenu({
         .setMinValues(0)
         .setMaxValues(10),
     execute: async (interaction) => {
-        if (!interaction.isRoleSelectMenu()) return;
+        if (!interaction.isRoleSelectMenu() || !interaction.inCachedGuild() || !interaction.guild.members.me) return;
 
         const highestRole = interaction.guild.members.me.roles.highest;
         const higherRole = interaction.roles.find(r => r.position >= highestRole.position);

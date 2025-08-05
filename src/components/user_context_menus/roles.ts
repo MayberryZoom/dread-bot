@@ -1,8 +1,7 @@
 import { ContextMenuCommandBuilder, ApplicationCommandType, PermissionFlagsBits, ActionRowBuilder, MessageFlags } from "discord.js";
 
 import { UserContextMenu } from "../../lib/context_menu";
-
-import { moderatorRole } from "../../../config.json";
+import { SelectMenuBuilder } from "../../lib/select_menu";
 
 
 export default new UserContextMenu({
@@ -13,11 +12,6 @@ export default new UserContextMenu({
         .setDMPermission(false),
     moderatorOnly: true,
     execute: async (interaction, manager) => {
-        if (!interaction.member?.roles.cache.has(moderatorRole)) {
-            interaction.reply({ content: "You don't have permission to execute this command!", flags: MessageFlags.Ephemeral });
-            return;
-        }
-
         const addRoleSelection = new ActionRowBuilder().addComponents(manager.createSelectMenu("addUserRolesSelection", interaction.targetUser.id));
         const removeRoleSelection = new ActionRowBuilder().addComponents(manager.createSelectMenu("removeUserRolesSelection", interaction.targetUser.id));
 

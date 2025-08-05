@@ -2,8 +2,6 @@ import { SlashCommandBuilder, PermissionFlagsBits, SlashCommandSubcommandBuilder
 
 import { Command, Subcommand } from "../../lib/command";
 
-import { moderatorRole } from "../../../config.json";
-
 
 const channelOption = (option) => option.setName("channel").setDescription("The channel to update");
 
@@ -22,12 +20,8 @@ export default new Command({
                     .setMaxValue(216000)
                     .setRequired(true))
                 .addChannelOption(channelOption),
+            moderatorOnly: true,
             execute: async (interaction) => {
-                if (!interaction.member?.roles.cache.has(moderatorRole)) {
-                    interaction.reply({ content: "You don't have permission to execute this command!", flags: MessageFlags.Ephemeral });
-                    return;
-                }
-
                 let channel = interaction.options.getChannel("channel");
                 if (!channel) channel = interaction.channel;
 
@@ -47,12 +41,8 @@ export default new Command({
                     .setMaxLength(100)
                     .setRequired(true))
                 .addChannelOption(channelOption),
+            moderatorOnly: true,
             execute: async (interaction) => {
-                if (!interaction.member.roles.cache.has(moderatorRole)) {
-                    interaction.reply({ content: "You don't have permission to execute this command!", flags: MessageFlags.Ephemeral });
-                    return;
-                }
-
                 let channel = interaction.options.getChannel("channel");
                 if (!channel) channel = interaction.channel;
 
@@ -66,12 +56,8 @@ export default new Command({
             builder: new SlashCommandSubcommandBuilder()
                 .setDescription("Sets the channel's description")
                 .addChannelOption(channelOption),
+            moderatorOnly: true,
             execute: async (interaction, manager) => {
-                if (!interaction.member.roles.cache.has(moderatorRole)) {
-                    interaction.reply({ content: "You don't have permission to execute this command!", flags: MessageFlags.Ephemeral });
-                    return;
-                }
-
                 let channel = interaction.options.getChannel("channel");
                 if (!channel) channel = interaction.channel;
 

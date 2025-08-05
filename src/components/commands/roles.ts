@@ -2,8 +2,6 @@ import { SlashCommandBuilder, PermissionFlagsBits, ActionRowBuilder, MessageFlag
 
 import { Command } from "../../lib/command";
 
-import { moderatorRole } from "../../../config.json";
-
 
 export default new Command({
     name: "roles",
@@ -17,11 +15,6 @@ export default new Command({
             .setRequired(true)),
     moderatorOnly: true,
     execute: async (interaction, manager) => {
-        if (!interaction.member?.roles.cache.has(moderatorRole)) {
-            interaction.reply({ content: "You don't have permission to execute this command.", flags: MessageFlags.Ephemeral });
-            return;
-        }
-
         const user = interaction.options.getUser("user");
         const addRoleSelection = new ActionRowBuilder().addComponents(manager.createSelectMenu("addUserRolesSelection", user.id));
         const removeRoleSelection = new ActionRowBuilder().addComponents(manager.createSelectMenu("removeUserRolesSelection", user.id));

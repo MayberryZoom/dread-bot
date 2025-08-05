@@ -13,14 +13,14 @@ const clean = text => {
 export default new Command({
     name: "eval",
     builder: new SlashCommandBuilder()
-		.setDescription("eval")
         .addStringOption(option => option
             .setName("code")
             .setDescription("Code to eval")
             .setRequired(true))
 		.addBooleanOption(option => option
 			.setName("no-return")
-            .setDescription("Don't return value")),
+            .setDescription("Don't return value"))
+		.setDescription("eval") as SlashCommandBuilder,
     ownerOnly: true,
     execute: async (interaction) => {
         const shouldReturn = !!interaction.options.getBoolean("return");

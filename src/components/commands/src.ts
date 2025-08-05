@@ -21,7 +21,9 @@ export default new Command({
             name: "verify",
             builder: new SlashCommandSubcommandBuilder().setDescription("Verify your speedrun.com account"),
             execute: async (interaction, manager) => {
+                if (!interaction.inCachedGuild()) return;
                 await interaction.guild.roles.fetch();
+
                 if (interaction.member.roles.cache.has(srcRole)) {
                     interaction.reply({ content: "You already have the SRC Verified role.", flags: MessageFlags.Ephemeral });
                     return;

@@ -22,6 +22,8 @@ export default new Modal({
         .setTitle("API Key Entry")
         .addComponents(apiKeyInputRow),
     execute: async (interaction) => {
+        if (!interaction.inCachedGuild()) return;
+
         const apiKey = interaction.fields.getTextInputValue("apiKeyInput");
 
         const profile = await axios.get("https://www.speedrun.com/api/v1/profile", { headers: { "X-API-Key": apiKey } })

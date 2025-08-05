@@ -7,12 +7,12 @@ import { SelectMenuBuilder } from "../../lib/select_menu";
 export default new Command({
     name: "roles",
     builder: new SlashCommandBuilder()
-        .setDescription("Sets a user's roles")
         .setDefaultMemberPermissions(PermissionFlagsBits.ViewAuditLog)
         .setDMPermission(false)
         .addUserOption(option => option
             .setName("user")
-            .setDescription("The user to update the roles of.")),
+            .setDescription("The user to update the roles of"))
+        .setDescription("Sets a user's roles") as SlashCommandBuilder,
     moderatorOnly: true,
     execute: async (interaction, manager) => {
         const user = interaction.options.getUser("user") || interaction.user;

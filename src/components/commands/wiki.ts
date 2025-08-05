@@ -206,7 +206,7 @@ export default new Command({
                     execute: async (interaction, manager) => {
                         if (!pagesIndex) throw Error("Error: Page Index undefined");
                         // Search page index and return if no page found
-                        let page = pagesIndex.find(p => p.title.toLowerCase() === interaction.options.getString("page").toLowerCase());
+                        let page = pagesIndex.find(p => p.title.toLowerCase() === interaction.options.getString("page", true).toLowerCase());
                         if (!page) {
                             interaction.reply({ content: "No page found!", flags: MessageFlags.Ephemeral });
                             return;
@@ -259,7 +259,9 @@ export default new Command({
             name: "verify",
             builder: new SlashCommandSubcommandBuilder().setDescription("Verify your wiki account"),
             execute: async (interaction) => {
+                if (!interaction.inCachedGuild()) return;
                 await interaction.guild.roles.fetch();
+
                 if (interaction.member.roles.cache.has(contributorRole)) {
                     interaction.reply({ content: "You already have the contributor role!", flags: MessageFlags.Ephemeral });
                     return;

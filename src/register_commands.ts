@@ -7,6 +7,10 @@ import { discordToken } from "../tokens.json";
 
 const rest = new REST().setToken(discordToken);
 
+interface ApplicationCommandsResult {
+	length: number;
+}
+
 export default async (commands: RESTPostAPIApplicationCommandsJSONBody[]) => {
     try {
 		console.log(`Started refreshing ${commands.length} application (/) commands.`);
@@ -14,7 +18,7 @@ export default async (commands: RESTPostAPIApplicationCommandsJSONBody[]) => {
 		const res = await rest.put(
 			Routes.applicationCommands(clientId),
 			{ body: commands },
-		);
+		) as ApplicationCommandsResult;
 
 		console.log(`Successfully reloaded ${res.length} application (/) commands.`);
     }

@@ -1,7 +1,7 @@
 import { exec } from "child_process";
 import { promisify } from "util";
 
-import { SlashCommandBuilder } from "discord.js";
+import { MessageFlags, SlashCommandBuilder } from "discord.js";
 
 import { Command } from "../../lib/command";
 
@@ -18,7 +18,7 @@ export default new Command({
             interaction.reply(stderr);
         }
         else {
-            interaction.reply({ content: "Rebooting...", ephemeral: true }).then(() => process.exit(0));
+            interaction.reply({ content: "Rebooting...", flags: MessageFlags.Ephemeral }).then(() => process.exit(0));
         }
     }
 })

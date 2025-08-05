@@ -1,4 +1,4 @@
-import { RoleSelectMenuBuilder } from "discord.js";
+import { MessageFlags, RoleSelectMenuBuilder } from "discord.js";
 
 import { formatRoles } from "../../lib/utils";
 import { SelectMenu } from "../../lib/select_menu";
@@ -17,7 +17,7 @@ export default new SelectMenu({
         const highestRole = interaction.guild.members.me.roles.highest;
         const higherRole = interaction.roles.find(r => r.position >= highestRole.position);
         if (higherRole) {
-            interaction.reply({ content: `The ${higherRole.toString()} role is not lower than my highest role. Please de-select it.`, ephemeral: true });
+            interaction.reply({ content: `The ${higherRole.toString()} role is not lower than my highest role. Please de-select it.`, flags: MessageFlags.Ephemeral });
             return;
         }
 
@@ -25,7 +25,7 @@ export default new SelectMenu({
         const oldRoles = member.roles.cache;
 
         if (!interaction.roles.find(r => r.id !== interaction.guild.roles.everyone.id && !oldRoles.has(r.id))) {
-            interaction.reply({ content: "No changes made, as no new roles were selected.", ephemeral: true });
+            interaction.reply({ content: "No changes made, as no new roles were selected.", flags: MessageFlags.Ephemeral });
             return;
         }
 
@@ -35,7 +35,7 @@ export default new SelectMenu({
         );
         if (newMember) interaction.reply({
             content: `${member.user.toString()}'s roles updated successfully.\n\nRoles added: ${newMember.roles.cache.difference(oldRoles).map(r => r.toString())}`,
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
         });
     }
 });

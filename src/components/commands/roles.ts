@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, PermissionFlagsBits, ActionRowBuilder } from "discord.js";
+import { SlashCommandBuilder, PermissionFlagsBits, ActionRowBuilder, MessageFlags } from "discord.js";
 
 import { Command } from "../../lib/command";
 
@@ -18,7 +18,7 @@ export default new Command({
     moderatorOnly: true,
     execute: async (interaction, manager) => {
         if (!interaction.member?.roles.cache.has(moderatorRole)) {
-            interaction.reply({ content: "You don't have permission to execute this command.", ephemeral: true });
+            interaction.reply({ content: "You don't have permission to execute this command.", flags: MessageFlags.Ephemeral });
             return;
         }
 
@@ -26,6 +26,6 @@ export default new Command({
         const addRoleSelection = new ActionRowBuilder().addComponents(manager.createSelectMenu("addUserRolesSelection", user.id));
         const removeRoleSelection = new ActionRowBuilder().addComponents(manager.createSelectMenu("removeUserRolesSelection", user.id));
 
-        await interaction.reply({ content: "Select " + user.toString() + "'s roles." , components: [addRoleSelection, removeRoleSelection], ephemeral: true });
+        await interaction.reply({ content: "Select " + user.toString() + "'s roles." , components: [addRoleSelection, removeRoleSelection], flags: MessageFlags.Ephemeral });
     },
 });

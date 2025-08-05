@@ -1,4 +1,4 @@
-import { ActivityType, Client, Collection, Events, GatewayIntentBits } from "discord.js";
+import { ActivityType, Client, Collection, Events, GatewayIntentBits, MessageFlags } from "discord.js";
 
 import registerCommands from "./register_commands";
 import { StreamBlacklist } from "./databases/db_objects";
@@ -50,7 +50,7 @@ dreadClient.on(Events.InteractionCreate, async (interaction) => {
         }
         catch(error) {
             console.error(error);
-            interaction.reply({ content: "There was an error while processing that interaction.", ephemeral: true });
+            interaction.reply({ content: "There was an error while processing that interaction.", flags: MessageFlags.Ephemeral });
         };
     }
 });

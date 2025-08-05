@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, SlashCommandSubcommandBuilder } from "discord.js";
+import { MessageFlags, SlashCommandBuilder, SlashCommandSubcommandBuilder } from "discord.js";
 
 import { StreamBlacklist } from "../../databases/db_objects";
 import { Command, Subcommand } from "../../lib/command";
@@ -17,7 +17,7 @@ export default new Command({
                 if (user) await user.destroy();
                 else await StreamBlacklist.create({ userId: interaction.user.id });
 
-                interaction.reply({ content: "Your streams will " + (user ? "now" : "no longer") + " be posted.", ephemeral: true });
+                interaction.reply({ content: "Your streams will " + (user ? "now" : "no longer") + " be posted.", flags: MessageFlags.Ephemeral });
             }
         }),
         new Subcommand({
@@ -26,7 +26,7 @@ export default new Command({
             execute: async (interaction) => {
                 const user = await StreamBlacklist.findOne({ where: { userId: interaction.user.id } });
 
-                interaction.reply({ content: "Your streams are currently " + (user ? "not " : "") + "being posted.", ephemeral: true });
+                interaction.reply({ content: "Your streams are currently " + (user ? "not " : "") + "being posted.", flags: MessageFlags.Ephemeral });
             }
         }),
     ],

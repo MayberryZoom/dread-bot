@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } from "discord.js";
+import { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, MessageFlags } from "discord.js";
 
 import { Modal } from "../../lib/modal";
 
@@ -32,6 +32,6 @@ export default new Modal({
             const res = await interaction.member.roles.add(srcRole);
             if (res) interaction.reply("Account verified. You should now have the SRC Verified role.");
         }
-        else interaction.reply({ content: "You must have a verified run of Metroid Dread to receive the SRC Verified role.", ephemeral: true });
+        else interaction.reply({ content: "You must have a verified run of Metroid Dread to receive the SRC Verified role.", flags: MessageFlags.Ephemeral });
     }
 });

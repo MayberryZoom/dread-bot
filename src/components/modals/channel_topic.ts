@@ -1,4 +1,4 @@
-import { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } from "discord.js";
+import { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, MessageFlags } from "discord.js";
 
 import { Modal } from "../../lib/modal";
 
@@ -22,6 +22,6 @@ export default new Modal({
         const id = interaction.customId.slice(13);
         const newTopic = interaction.fields.getTextInputValue("channelTopicTopic");
         const res = await interaction.guild.channels.cache.get(id).setTopic(newTopic, `Channel topic set to ${newTopic} by ${interaction.user.username}.`);
-        if (res) interaction.reply({ content: "Channel updated successfully.", ephemeral: true });
+        if (res) interaction.reply({ content: "Channel updated successfully.", flags: MessageFlags.Ephemeral });
     }
 });

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandSubcommandBuilder, AutocompleteInteraction, InteractionReplyOptions, Collection } from "discord.js";
+import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandSubcommandBuilder, AutocompleteInteraction, InteractionReplyOptions, Collection, MessageFlags } from "discord.js";
 
 import { Command, Subcommand, SubcommandGroup } from "../../lib/command";
 import { PageSubsection, PageSection, CachedPage } from "../../lib/utils";
@@ -208,7 +208,7 @@ export default new Command({
                         // Search page index and return if no page found
                         let page = pagesIndex.find(p => p.title.toLowerCase() === interaction.options.getString("page").toLowerCase());
                         if (!page) {
-                            interaction.reply({ content: "No page found!", ephemeral: true });
+                            interaction.reply({ content: "No page found!", flags: MessageFlags.Ephemeral });
                             return;
                         }
 
@@ -230,7 +230,7 @@ export default new Command({
                         // Search page index and return if no page found
                         let page = pagesIndex.find(p => p.title.toLowerCase() === interaction.options.getString("page", true).toLowerCase());
                         if (!page) {
-                            interaction.reply({ content: "No page found!", ephemeral: true });
+                            interaction.reply({ content: "No page found!", flags: MessageFlags.Ephemeral });
                             return;
                         }
 
@@ -261,13 +261,13 @@ export default new Command({
             execute: async (interaction) => {
                 await interaction.guild.roles.fetch();
                 if (interaction.member.roles.cache.has(contributorRole)) {
-                    interaction.reply({ content: "You already have the contributor role!", ephemeral: true });
+                    interaction.reply({ content: "You already have the contributor role!", flags: MessageFlags.Ephemeral });
                     return;
                 }
 
                 const user = await fetchUser(interaction.user.id);
                 if (!user) {
-                    interaction.reply({ content: "No user found!", ephemeral: true })
+                    interaction.reply({ content: "No user found!", flags: MessageFlags.Ephemeral })
                     return;
                 }
 

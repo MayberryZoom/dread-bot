@@ -1,10 +1,9 @@
-
-import { ExecuteInteractionFunction } from "./utils";
+import { Interaction, MessageFlags, RepliableInteraction } from "discord.js";
 
 import { ComponentManager } from "./component_manager";
+import { ExecuteInteractionFunction } from "./utils";
 
 import { owners } from "../../config.json";
-import { Interaction, RepliableInteraction } from "discord.js";
 
 
 export interface BaseComponentConstructor {
@@ -34,9 +33,9 @@ export interface ExecutableComponentConstructor extends BaseComponentConstructor
 export abstract class ExecutableComponent extends BaseComponent {
     public abstract _execute?: ExecuteInteractionFunction<RepliableInteraction>;
 
-    public async canExecute(interaction: Interaction | RepliableInteraction): Promise<boolean> {
+    public async canExecute(interaction: Interaction): Promise<boolean> {
         if (this.ownerOnly && !owners.includes(interaction.user.id)) {
-            if (!interaction.isAutocomplete()) interaction.reply({ content: "Only the bot owners can use that command.", ephemeral: true });
+            if (interaction.isRepliable()) interaction.reply({ content: "Only the bot owners can use that command.", flags: MessageFlags.Ephemeral });
             return false;
         }
         else return true;

@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, PermissionFlagsBits, SlashCommandSubcommandBuilder } from "discord.js";
+import { SlashCommandBuilder, PermissionFlagsBits, SlashCommandSubcommandBuilder, MessageFlags } from "discord.js";
 
 import { Command, Subcommand } from "../../lib/command";
 
@@ -24,7 +24,7 @@ export default new Command({
                 .addChannelOption(channelOption),
             execute: async (interaction) => {
                 if (!interaction.member?.roles.cache.has(moderatorRole)) {
-                    interaction.reply({ content: "You don't have permission to execute this command!", ephemeral: true });
+                    interaction.reply({ content: "You don't have permission to execute this command!", flags: MessageFlags.Ephemeral });
                     return;
                 }
 
@@ -33,7 +33,7 @@ export default new Command({
 
                 const cd = interaction.options.getNumber("cooldown");
                 const res = await channel.setRateLimitPerUser(cd, "Slowmode set to " + cd + " seconds by " + interaction.user.username + ".");
-                if (res) interaction.reply({ content: "Channel updated successfully.", ephemeral: true });
+                if (res) interaction.reply({ content: "Channel updated successfully.", flags: MessageFlags.Ephemeral });
             },
         }),
         new Subcommand({
@@ -49,7 +49,7 @@ export default new Command({
                 .addChannelOption(channelOption),
             execute: async (interaction) => {
                 if (!interaction.member.roles.cache.has(moderatorRole)) {
-                    interaction.reply({ content: "You don't have permission to execute this command!", ephemeral: true });
+                    interaction.reply({ content: "You don't have permission to execute this command!", flags: MessageFlags.Ephemeral });
                     return;
                 }
 
@@ -58,7 +58,7 @@ export default new Command({
 
                 const newName = interaction.options.getString("name");
                 const res = await channel.setName(newName, "Channel name changed to #" + newName + " by " + interaction.user.username + ".");
-                if (res) interaction.reply({ content: "Channel updated successfully.", ephemeral: true });
+                if (res) interaction.reply({ content: "Channel updated successfully.", flags: MessageFlags.Ephemeral });
             },
         }),
         new Subcommand({
@@ -68,7 +68,7 @@ export default new Command({
                 .addChannelOption(channelOption),
             execute: async (interaction, manager) => {
                 if (!interaction.member.roles.cache.has(moderatorRole)) {
-                    interaction.reply({ content: "You don't have permission to execute this command!", ephemeral: true });
+                    interaction.reply({ content: "You don't have permission to execute this command!", flags: MessageFlags.Ephemeral });
                     return;
                 }
 

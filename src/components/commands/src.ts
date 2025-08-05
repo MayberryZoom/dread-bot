@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ActionRowBuilder, SlashCommandSubcommandBuilder } from "discord.js";
+import { SlashCommandBuilder, ActionRowBuilder, SlashCommandSubcommandBuilder, MessageFlags } from "discord.js";
 
 import { Command, Subcommand } from "../../lib/command";
 
@@ -23,12 +23,12 @@ export default new Command({
             execute: async (interaction, manager) => {
                 await interaction.guild.roles.fetch();
                 if (interaction.member.roles.cache.has(srcRole)) {
-                    interaction.reply({ content: "You already have the SRC Verified role.", ephemeral: true });
+                    interaction.reply({ content: "You already have the SRC Verified role.", flags: MessageFlags.Ephemeral });
                     return;
                 }
 
                 const buttonRow = new ActionRowBuilder().addComponents(manager.createButton("showModalConfirm", "srcApiKey"));
-                interaction.reply({ content: apiKeyWarning, components: [buttonRow], ephemeral: true });
+                interaction.reply({ content: apiKeyWarning, components: [buttonRow], flags: MessageFlags.Ephemeral });
             }
         })
     ],

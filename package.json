@@ -19,6 +19,7 @@
     "@eslint/js": "^9.32.0",
     "@types/node": "^24.1.0",
     "eslint": "^8.57.1",
+    "husky": "^9.1.7",
     "nodemon": "^3.1.10",
     "tsx": "^4.20.3",
     "typescript-eslint": "^8.38.0"
@@ -30,5 +31,8 @@
   "bugs": {
     "url": "https://github.com/MayberryZoom/dread-bot/issues"
   },
-  "homepage": "https://github.com/MayberryZoom/dread-bot#readme"
+  "homepage": "https://github.com/MayberryZoom/dread-bot#readme",
+  "scripts": {
+    "prepare": "husky"
+  }
 }

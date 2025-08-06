@@ -90,28 +90,4 @@ export class Command extends BaseCommand {
             return [subcommand.name, subcommand] as [string, Subcommand];
         }));
     }
-
-    // public abstract get name(): string;
-
-    // public abstract get builder(): SlashCommandBuilder;
-
-    // public static get subcommandGroups(): Collection<string, SubcommandGroup> {
-    //     throw Error(`${this.constructor.name}.subcommandGroups is undefined.`);
-    // }
-
-    // public static get subcommands(): Collection<string, Subcommand> {
-    //     throw Error(`${this.constructor.name}.subcommands is undefined.`);
-    // }
-
-    // public static get moderatorOnly(): boolean {
-    //     throw Error(`${this.constructor.name}.moderatorOnly is undefined.`);
-    // }
-
-    // public static get ownerOnly(): boolean {
-    //     throw Error(`${this.constructor.name}.ownerOnly is undefined.`);
-    // }
-
-    // public abstract execute(): string;
-
-    // public abstract autocomplete(): string;
 }

@@ -37,7 +37,7 @@ dreadClient.on(Events.InteractionCreate, async (interaction) => {
     if (interaction.isAutocomplete()) {
         const command = manager.getCommand(interaction.commandName, interaction.options)
         try {
-            await command.autocomplete(interaction, manager);
+            await command.autocomplete(interaction);
         }
         catch(error) {
             console.error(error);

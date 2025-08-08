@@ -1,19 +1,20 @@
-import { AutocompleteInteraction, ChatInputCommandInteraction, Collection, SlashCommandBuilder, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder } from "discord.js";
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, Collection, SlashCommandBuilder, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder } from "discord.js";
 
 import { BaseComponent, BaseComponentConstructor, ExecutableComponent, ExecutableComponentConstructor } from "./base_component";
-import { ComponentManager } from "./component_manager";
 import { ExecuteInteractionFunction } from "./utils";
 
 
 // Base class
+type AutocompleteOptionsFunction = (interaction: AutocompleteInteraction) => Promise<ApplicationCommandOptionChoiceData[]>;
+
 interface BaseCommandConstructor extends ExecutableComponentConstructor {
     execute?: ExecuteInteractionFunction<ChatInputCommandInteraction>;
-    autocomplete?: ExecuteInteractionFunction<AutocompleteInteraction>;
+    autocomplete?: AutocompleteOptionsFunction;
 }
 
 abstract class BaseCommand extends ExecutableComponent {
     public _execute?: ExecuteInteractionFunction<ChatInputCommandInteraction>;
-    public _autocomplete?: ExecuteInteractionFunction<AutocompleteInteraction>;
+    public _autocomplete?: AutocompleteOptionsFunction;
 
     public constructor(fields: BaseCommandConstructor) {
         super(fields);
@@ -21,8 +22,12 @@ abstract class BaseCommand extends ExecutableComponent {
         this._autocomplete = fields.autocomplete;
     }
 
-    public async autocomplete(interaction: AutocompleteInteraction, manager: ComponentManager): Promise<void> {
-        if (this._autocomplete && await this.canExecute(interaction)) await this._autocomplete(interaction, manager);
+    public async autocomplete(interaction: AutocompleteInteraction): Promise<void> {
+        if (this._autocomplete && await this.canExecute(interaction)) {
+            let choices = await this._autocomplete(interaction)
+            if (choices.length > 25) choices = choices.slice(0, 24);
+            await interaction.respond(choices);
+        }
     }
 }
 

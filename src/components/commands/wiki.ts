@@ -189,7 +189,7 @@ const autocompletePage = async (interaction: AutocompleteInteraction) => {
     if (pages.length > 25) pages = pages.slice(0, 24);
 
     // Return list of matching pages
-    interaction.respond(pages.map(p => ({ name: p.title, value: p.title })));
+    return pages.map(p => ({ name: p.title, value: p.title }));
 }
 
 export default new Command({

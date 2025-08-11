@@ -21,4 +21,4 @@ export default new Command({
             interaction.reply({ content: "Rebooting...", flags: MessageFlags.Ephemeral }).then(() => process.exit(0));
         }
     }
-})
+});

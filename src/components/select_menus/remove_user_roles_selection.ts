@@ -1,7 +1,7 @@
 import { MessageFlags, RoleSelectMenuBuilder } from "discord.js";
 
-import { formatRoles } from "../../lib/utils";
 import { SelectMenu } from "../../lib/select_menu";
+import { formatRoles } from "../../lib/utils";
 
 
 export default new SelectMenu({

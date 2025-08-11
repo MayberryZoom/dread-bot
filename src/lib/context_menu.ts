@@ -1,6 +1,7 @@
 import { ContextMenuCommandBuilder, UserContextMenuCommandInteraction } from "discord.js";
-import { ExecuteInteractionFunction } from "./utils";
+
 import { ExecutableComponent, ExecutableComponentConstructor } from "./base_component";
+import { ExecuteInteractionFunction } from "./utils";
 
 
 interface UserContextMenuConstructor extends ExecutableComponentConstructor {
@@ -14,7 +15,7 @@ export class UserContextMenu extends ExecutableComponent {
 
     public constructor(fields: UserContextMenuConstructor) {
         super(fields);
-        this.builder = fields.builder.setName(fields.name)
+        this.builder = fields.builder.setName(fields.name);
         this._execute = fields.execute;
     }
 }

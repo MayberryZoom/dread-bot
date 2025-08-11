@@ -24,7 +24,7 @@ abstract class BaseCommand extends ExecutableComponent {
 
     public async autocomplete(interaction: AutocompleteInteraction): Promise<void> {
         if (this._autocomplete && await this.canExecute(interaction)) {
-            let choices = await this._autocomplete(interaction)
+            let choices = await this._autocomplete(interaction);
             if (choices.length > 25) choices = choices.slice(0, 24);
             await interaction.respond(choices);
         }

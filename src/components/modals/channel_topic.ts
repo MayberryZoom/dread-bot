@@ -23,8 +23,8 @@ export default new Modal({
 
         const id = interaction.customId.slice(13);
         const newTopic = interaction.fields.getTextInputValue("channelTopicTopic");
-        const channel = interaction.guild.channels.cache.get(id)
-        if (!channel || !channel.isTextBased() || channel.isThread() || channel.isVoiceBased()) throw Error(`Invalid channel ${id}.`)
+        const channel = interaction.guild.channels.cache.get(id);
+        if (!channel || !channel.isTextBased() || channel.isThread() || channel.isVoiceBased()) throw Error(`Invalid channel ${id}.`);
 
         await channel.setTopic(newTopic, `Channel topic set to ${newTopic} by ${interaction.user.username}.`);
         interaction.reply({ content: "Channel updated successfully.", flags: MessageFlags.Ephemeral });

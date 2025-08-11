@@ -12,5 +12,5 @@ const sequelize = new Sequelize("database", "user", "password", {
 });
 
 // Models
-export const BotConfigTable = createBotConfigModel(sequelize)
-export const StreamBlacklistTable = createStreamBlacklistModel(sequelize)
+export const BotConfigTable = createBotConfigModel(sequelize);
+export const StreamBlacklistTable = createStreamBlacklistModel(sequelize);

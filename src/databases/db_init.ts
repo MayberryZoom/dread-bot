@@ -12,8 +12,8 @@ const sequelize = new Sequelize("database", "user", "password", {
 });
 
 // Import models
-createBotConfigModel(sequelize)
-createStreamBlacklistModel(sequelize)
+createBotConfigModel(sequelize);
+createStreamBlacklistModel(sequelize);
 
 // Force sync command line option
 const force = process.argv.includes("--force") || process.argv.includes("-f");

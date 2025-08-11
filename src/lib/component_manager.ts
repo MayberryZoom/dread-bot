@@ -1,12 +1,12 @@
 import { CacheType, Collection, CommandInteractionOptionResolver, InteractionType, RepliableInteraction } from "discord.js";
 
+import { ExecutableComponent } from "./base_component";
 import { Button } from "./button";
 import { Command, SubcommandGroup } from "./command";
 import { UserContextMenu } from "./context_menu";
 import { Modal } from "./modal";
 import { SelectMenu } from "./select_menu";
 import { CachedPage } from "./utils";
-import { ExecutableComponent } from "./base_component";
 
 
 export class ComponentManager {
@@ -21,20 +21,20 @@ export class ComponentManager {
 
     public getCommand(commandName: string, options: Pick<CommandInteractionOptionResolver<CacheType>, "getSubcommandGroup" | "getSubcommand">) {
         const command = this.commands.get(commandName);
-        if (!command) throw `No command ${commandName}`;
+        if (!command) throw Error(`No command ${commandName}`);
 
-        const subcommandGroupName = options.getSubcommandGroup(false)
-        const subcommandName = options.getSubcommand(false)
+        const subcommandGroupName = options.getSubcommandGroup(false);
+        const subcommandName = options.getSubcommand(false);
 
         if (command.subcommands && subcommandName) {
             let group: SubcommandGroup | undefined;
             if (command.subcommandGroups && subcommandGroupName) {
                 group = command.subcommandGroups.get(subcommandGroupName);
-                if (!group) throw `No subcommand group ${subcommandGroupName}`;
+                if (!group) throw Error(`No subcommand group ${subcommandGroupName}`);
             }
 
             const subcommand = (group ? group : command).subcommands.get(subcommandName);
-            if (!subcommand) throw `No subcommand ${subcommandName}`
+            if (!subcommand) throw Error(`No subcommand ${subcommandName}`);
             return subcommand;
         }
         else return command;
@@ -42,13 +42,13 @@ export class ComponentManager {
 
     public getUserContextMenu(userContextMenuName: string) {
         const userContextMenu = this.userContextMenus.get(userContextMenuName);
-        if (!userContextMenu) throw `No userContextMenu ${userContextMenuName}`;
+        if (!userContextMenu) throw Error(`No userContextMenu ${userContextMenuName}`);
         else return userContextMenu;
     }
 
     public getModal(modalName: string) {
         const modal = this.modals.get(modalName);
-        if (!modal) throw `No modal ${modalName}`;
+        if (!modal) throw Error(`No modal ${modalName}`);
         else return modal;
     }
 
@@ -58,7 +58,7 @@ export class ComponentManager {
 
     public getButton(buttonName: string) {
         const button = this.buttons.get(buttonName);
-        if (!button) throw `No button ${buttonName}`;
+        if (!button) throw Error(`No button ${buttonName}`);
         else return button;
     }
 
@@ -68,7 +68,7 @@ export class ComponentManager {
 
     public getSelectMenu(selectMenuName: string) {
         const selectMenu = this.selectMenus.get(selectMenuName);
-        if (!selectMenu) throw `No selectMenu ${selectMenuName}`;
+        if (!selectMenu) throw Error(`No selectMenu ${selectMenuName}`);
         else return selectMenu;
     }
 

@@ -17,7 +17,7 @@ import { discordToken } from "../tokens.json";
 const dreadClient = new Client({
     intents: [ GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildPresences ],
     allowedMentions: { parse: ["users"], repliedUser: true },
-    rest: { rejectOnRateLimit: ["/channels"] }
+    rest: { rejectOnRateLimit: ["/channels"] },
 });
 
 const manager = new ComponentManager(
@@ -34,7 +34,7 @@ registerCommands([...(manager.commands.map(c => c.builder.toJSON())), ...manager
 // Interaction handler
 dreadClient.on(Events.InteractionCreate, async (interaction) => {
     if (interaction.isAutocomplete()) {
-        const command = manager.getCommand(interaction.commandName, interaction.options)
+        const command = manager.getCommand(interaction.commandName, interaction.options);
         try {
             await command.autocomplete(interaction);
         }

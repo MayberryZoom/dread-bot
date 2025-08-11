@@ -10,9 +10,9 @@ import { wikiToken } from "../../../tokens.json";
 
 
 interface ApiPage {
-    content: string,
-    title: string,
-    path: string,
+    content: string;
+    title: string;
+    path: string;
 }
 
 // Initialize page index
@@ -174,7 +174,7 @@ const pageOption = (option) => option.setName("page").setDescription("Name of pa
 
 // Functions to fetch wiki user
 const fetchUser = async (id: string) => {
-    const userQuery = `{users{singleByProviderId(providerId:"${id}"){id,providerId,name,providerName}}}`
+    const userQuery = `{users{singleByProviderId(providerId:"${id}"){id,providerId,name,providerName}}}`;
     const res = await axios.get(`https://${graphQlDomain}/graphql?query=${userQuery}`, { headers: { "Authorization": "Bearer " + wikiToken } });
     return res.data.data.users.singleByProviderId;
 }
@@ -244,7 +244,7 @@ export default new Command({
                         // If page has multiple sections, add buttons to tab through sections
                         if (page.content.length > 1) toSend.components = [new ActionRowBuilder<ButtonBuilder>().addComponents(
                             manager.createButton("pageBack", pageId).setDisabled(true),
-                            manager.createButton("pageForward", pageId)
+                            manager.createButton("pageForward", pageId),
                         )];
 
                         // Send reply

@@ -26,8 +26,8 @@ export default new Modal({
 
         const apiKey = interaction.fields.getTextInputValue("apiKeyInput");
 
-        const profile = await axios.get("https://www.speedrun.com/api/v1/profile", { headers: { "X-API-Key": apiKey } })
-        const personalBests = await axios.get(profile.data.data.links.find(x => x.rel === "personal-bests").uri)
+        const profile = await axios.get("https://www.speedrun.com/api/v1/profile", { headers: { "X-API-Key": apiKey } });
+        const personalBests = await axios.get(profile.data.data.links.find(x => x.rel === "personal-bests").uri);
         const foundRun = personalBests.data.data.find(run => ["3dxkz0v1", "nd2838rd"].includes(run.run.game) && run.run.status.status === "verified");
 
         if (foundRun) {

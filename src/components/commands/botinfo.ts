@@ -24,7 +24,7 @@ export default new Command({
             .addFields(
                 { name: "Current memory usage", value: Math.floor(process.memoryUsage().heapUsed / 1024 / 1024 * 100) / 100 + " MB", inline: true },
                 { name: "Creation Date", value: interaction.client.user.createdAt.toUTCString(), inline: true },
-                { name: "Uptime", value: uptime(interaction.client), inline: true }
+                { name: "Uptime", value: uptime(interaction.client), inline: true },
             );
         interaction.reply({ embeds: [embed] });
     }

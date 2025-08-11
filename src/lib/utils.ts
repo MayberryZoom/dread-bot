@@ -3,7 +3,7 @@ import { resolve as resolvePath } from "node:path";
 import { pathToFileURL } from "node:url";
 const __dirname = import.meta.dirname;
 
-import { Activity, Collection, EmbedBuilder, User } from "discord.js";
+import { Activity, Collection, EmbedBuilder, Role, User } from "discord.js";
 
 import { ComponentManager } from "./component_manager";
 
@@ -19,26 +19,26 @@ export interface NamedObject {
 }
 
 export interface PageSubsection {
-    header: string,
-    body: string,
+    header: string;
+    body: string;
 }
 
 export interface PageSection {
-    header: string,
-    body?: string,
-    image?: string,
-    subsections: PageSubsection[],
+    header: string;
+    body?: string;
+    image?: string;
+    subsections: PageSubsection[];
 }
 
 export interface CachedPage {
-    content: PageSection[],
-    path: string,
-    timestamp: number,
+    content: PageSection[];
+    path: string;
+    timestamp: number;
 }
 
 export const assertType = <T>(value: T, expectedType: unknown): asserts value is T => {
     if (typeof value !== expectedType) throw Error(`Value ${value} is not of type ${expectedType}`);
-}
+};
 
 export const buildComponentCollection = async <T extends NamedObject>(folderName: string) => {
     const collectedComponents = new Collection<string, T>()
@@ -48,16 +48,16 @@ export const buildComponentCollection = async <T extends NamedObject>(folderName
         collectedComponents.set(component.name, component);
     }
     return collectedComponents;
-}
+};
 
 export const namedObjectMapper = <T extends NamedObject>(entry: T) => [entry.name, entry] as [string, T];
 
-export const formatRoles = (roles) => {
-    if (roles.length === 1) return "@" + roles[0];
-    else if (roles.length === 2) return "@" + roles[0] + " and @" + roles[1];
+export const formatRoles = (roles: (Role | string)[]) => {
+    if (roles.length === 1) return `@${roles[0]}`;
+    else if (roles.length === 2) return `@${roles[0]} and @${roles[1]}`;
     else if (roles.length > 2) {
         const lastElement = roles.pop();
-        return roles.map(r => "@" + r + ", ").join() + "@" + lastElement;
+        return roles.map(r => `@${r}, `).join() + "@" + lastElement;
     }
 };
 

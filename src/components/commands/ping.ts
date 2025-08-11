@@ -21,7 +21,7 @@ export default new Command({
                 const sent = await interaction.reply({ content: "Pinging...", withResponse: true });
                 const responseTime = sent.resource?.message?.createdTimestamp;
                 if (responseTime) interaction.editReply(`Ping: ${responseTime - interaction.createdTimestamp}ms`);
-                else interaction.editReply("There was an error while processing that interaction.")
+                else interaction.editReply("There was an error while processing that interaction.");
             },
         }),
     ],

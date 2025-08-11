@@ -24,7 +24,7 @@ export default new Command({
                 await interaction.guild.roles.fetch();
 
                 const srcRole = await BotConfigTable.findOne({ where: { id: "srcRole", guild: interaction.guild.id } }).then(x => x?.get("value"));
-                if (!srcRole) throw Error("No SRC role configured.")
+                if (!srcRole) throw Error("No SRC role configured.");
 
                 if (interaction.member.roles.cache.has(srcRole)) {
                     interaction.reply({ content: "You already have the SRC Verified role.", flags: MessageFlags.Ephemeral });

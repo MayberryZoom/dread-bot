@@ -1,6 +1,6 @@
 import { Sequelize } from "sequelize";
 
-import { createStreamBlacklistModel } from "./db_models";
+import { createBotConfigModel, createStreamBlacklistModel } from "./db_models";
 
 
 // Initialize sequelize
@@ -12,4 +12,5 @@ const sequelize = new Sequelize("database", "user", "password", {
 });
 
 // Models
-export const StreamBlacklist = createStreamBlacklistModel(sequelize)
+export const BotConfigTable = createBotConfigModel(sequelize)
+export const StreamBlacklistTable = createStreamBlacklistModel(sequelize)

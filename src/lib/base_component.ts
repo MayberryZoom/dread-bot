@@ -2,8 +2,9 @@ import { Interaction, MessageFlags, RepliableInteraction } from "discord.js";
 
 import { ComponentManager } from "./component_manager";
 import { ExecuteInteractionFunction } from "./utils";
+import { BotConfigTable } from "../databases/db_objects";
 
-import { owners, moderatorRole } from "../../config.json";
+import { owners } from "../../config.json";
 
 
 export interface BaseComponentConstructor {
@@ -34,15 +35,21 @@ export abstract class ExecutableComponent extends BaseComponent {
     public abstract _execute?: ExecuteInteractionFunction<RepliableInteraction>;
 
     public async canExecute(interaction: Interaction): Promise<boolean> {
-        if (this.ownerOnly && !owners.includes(interaction.user.id)) {
-            if (interaction.isRepliable()) interaction.reply({ content: "Only the bot owners can use that command.", flags: MessageFlags.Ephemeral });
-            return false;
+        if (this.ownerOnly) {
+            if (!owners.includes(interaction.user.id)) {
+                if (interaction.isRepliable()) interaction.reply({ content: "Only the bot owners can use that command.", flags: MessageFlags.Ephemeral });
+                return false;
+            }
+            else return true;
         }
-        else if (this.moderatorOnly && interaction.inCachedGuild() && !interaction.member?.roles.cache.has(moderatorRole)) {
-            if (interaction.isRepliable()) interaction.reply({ content: "Only moderators can use that command.", flags: MessageFlags.Ephemeral });
-            return false;
+        else if (this.moderatorOnly && interaction.inCachedGuild()) {
+            const moderatorRole = await BotConfigTable.findOne({ where: { id: "moderatorRole", guild: interaction.guild.id } }).then(x => x?.get("value"));
+            if (!moderatorRole || !interaction.member?.roles.cache.has(moderatorRole)) {
+                if (interaction.isRepliable()) interaction.reply({ content: "Only moderators can use that command.", flags: MessageFlags.Ephemeral });
+                return false;
+            }
         }
-        else return true;
+        return true;
     }
 
     public async execute(interaction: RepliableInteraction, manager: ComponentManager): Promise<void> {

@@ -1,6 +1,6 @@
 import { MessageFlags, SlashCommandBuilder, SlashCommandSubcommandBuilder } from "discord.js";
 
-import { StreamBlacklist } from "../../databases/db_objects";
+import { StreamBlacklistTable } from "../../databases/db_objects";
 import { Command, Subcommand } from "../../lib/command";
 
 
@@ -12,10 +12,10 @@ export default new Command({
             name: "toggle",
             builder: new SlashCommandSubcommandBuilder().setDescription("Opt-out/in from having your streams posted"),
             execute: async (interaction) => {
-                const user = await StreamBlacklist.findOne({ where: { userId: interaction.user.id } });
+                const user = await StreamBlacklistTable.findOne({ where: { userId: interaction.user.id } });
 
                 if (user) await user.destroy();
-                else await StreamBlacklist.create({ userId: interaction.user.id });
+                else await StreamBlacklistTable.create({ userId: interaction.user.id });
 
                 interaction.reply({ content: "Your streams will " + (user ? "now" : "no longer") + " be posted.", flags: MessageFlags.Ephemeral });
             }
@@ -24,7 +24,7 @@ export default new Command({
             name: "status",
             builder: new SlashCommandSubcommandBuilder().setDescription("Check the status of your stream notifications"),
             execute: async (interaction) => {
-                const user = await StreamBlacklist.findOne({ where: { userId: interaction.user.id } });
+                const user = await StreamBlacklistTable.findOne({ where: { userId: interaction.user.id } });
 
                 interaction.reply({ content: "Your streams are currently " + (user ? "not " : "") + "being posted.", flags: MessageFlags.Ephemeral });
             }

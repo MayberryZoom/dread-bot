@@ -1,10 +1,11 @@
 import axios from "axios";
 import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandSubcommandBuilder, AutocompleteInteraction, InteractionReplyOptions, Collection, MessageFlags, ButtonBuilder } from "discord.js";
 
+import { BotConfigTable } from "../../databases/db_objects";
 import { Command, Subcommand, SubcommandGroup } from "../../lib/command";
 import { PageSubsection, PageSection, CachedPage } from "../../lib/utils";
 
-import { wikiDomain, graphQlDomain, contributorRole } from "../../../config.json";
+import { wikiDomain, graphQlDomain } from "../../../config.json";
 import { wikiToken } from "../../../tokens.json";
 
 
@@ -264,6 +265,9 @@ export default new Command({
                     return;
                 }
                 await interaction.guild.roles.fetch();
+
+                const contributorRole = await BotConfigTable.findOne({ where: { id: "contributorRole", guild: interaction.guild.id } }).then(x => x?.get("value"));
+                if (!contributorRole) throw Error("No wiki contributor role configured.")
 
                 if (interaction.member.roles.cache.has(contributorRole)) {
                     interaction.reply({ content: "You already have the contributor role.", flags: MessageFlags.Ephemeral });

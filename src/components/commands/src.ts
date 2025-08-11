@@ -1,8 +1,7 @@
 import { SlashCommandBuilder, ActionRowBuilder, SlashCommandSubcommandBuilder, MessageFlags, ButtonBuilder, InteractionContextType } from "discord.js";
 
+import { BotConfigTable } from "../../databases/db_objects";
 import { Command, Subcommand } from "../../lib/command";
-
-import { srcRole } from "../../../config.json";
 
 
 const apiKeyWarning = `When you press the button below, you will be prompted by a window to provide your API key from SRC.
@@ -23,6 +22,9 @@ export default new Command({
             execute: async (interaction, manager) => {
                 if (!interaction.inCachedGuild()) return;
                 await interaction.guild.roles.fetch();
+
+                const srcRole = await BotConfigTable.findOne({ where: { id: "srcRole", guild: interaction.guild.id } }).then(x => x?.get("value"));
+                if (!srcRole) throw Error("No SRC role configured.")
 
                 if (interaction.member.roles.cache.has(srcRole)) {
                     interaction.reply({ content: "You already have the SRC Verified role.", flags: MessageFlags.Ephemeral });

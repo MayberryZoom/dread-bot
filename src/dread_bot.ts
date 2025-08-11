@@ -1,7 +1,6 @@
 import { ActivityType, Client, Collection, Events, GatewayIntentBits, MessageFlags } from "discord.js";
 
-import registerCommands from "./register_commands";
-import { StreamBlacklist } from "./databases/db_objects";
+import { BotConfigTable, StreamBlacklistTable } from "./databases/db_objects";
 import { Button } from "./lib/button";
 import { Command } from "./lib/command";
 import { ComponentManager } from "./lib/component_manager";
@@ -9,8 +8,8 @@ import { UserContextMenu } from "./lib/context_menu";
 import { Modal } from "./lib/modal";
 import { SelectMenu } from "./lib/select_menu";
 import { buildComponentCollection, objectsArrayEquals, streamEmbed } from "./lib/utils";
+import registerCommands from "./register_commands";
 
-import { dreadServer, streamsChannel, streamingRole } from "../config.json";
 import { discordToken } from "../tokens.json";
 
 
@@ -58,15 +57,19 @@ dreadClient.on(Events.InteractionCreate, async (interaction) => {
 dreadClient.on(Events.PresenceUpdate, async (oldPresence, newPresence) => {
     if (
         !newPresence.guild
-        || newPresence.guild.id !== dreadServer
         || !newPresence.user
         || !newPresence.member
     ) return;
+
+    const streamsChannel = await BotConfigTable.findOne({ where: { id: "streamsChannel", guild: newPresence.guild.id } }).then(x => x?.get("value"));
+    const streamingRole = await BotConfigTable.findOne({ where: { id: "streamingRole", guild: newPresence.guild.id } }).then(x => x?.get("value"));
+    if (!streamsChannel || !streamingRole) return;
+
     const newStreams = newPresence.activities.filter(activity => activity.type === ActivityType.Streaming && activity.state === "Metroid Dread");
     const oldStreams = oldPresence?.activities.filter(activity => activity.type === ActivityType.Streaming && activity.state === "Metroid Dread") || [];
     if (newStreams.length > 0) {
         if (!oldPresence || !objectsArrayEquals(newStreams, oldStreams)) {
-            const user = await StreamBlacklist.findOne({ where: { userId: newPresence.user.id } });
+            const user = await StreamBlacklistTable.findOne({ where: { userId: newPresence.user.id } });
             if (!user) {
                 newStreams.forEach(async (stream) => {
                     const channel = await dreadClient.channels.fetch(streamsChannel);

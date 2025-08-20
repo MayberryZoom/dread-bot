@@ -4,6 +4,54 @@ import { BotConfig } from "../../databases/db_models";
 import { Command, Subcommand, SubcommandGroup } from "../../lib/command";
 
 
+const createRoleConfigSubcommand = (name: string, databaseId: string, description: string, shortDescription: string) => new Subcommand({
+    name: name,
+    builder: new SlashCommandSubcommandBuilder()
+        .setDescription(`Configure ${description}`)
+        .addRoleOption(option => option
+            .setName(name)
+            .setDescription(description[0].toUpperCase() + description.slice(1))
+            .setRequired(true)
+        ),
+    moderatorOnly: true,
+    ownerOnly: true,
+    execute: async (interaction) => {
+        if (!interaction.inCachedGuild()) throw Error("Guild not cached.");
+
+        const role = interaction.options.getRole(name, true);
+        await BotConfig.upsert({
+            id: databaseId,
+            value: role.id,
+            guild: interaction.guild.id,
+        });
+        await interaction.reply(`Successfully updated config for ${shortDescription} to ${role}.`);
+    },
+});
+
+const createChannelConfigSubcommand = (name: string, databaseId: string, description: string, shortDescription: string) => new Subcommand({
+    name: name,
+    builder: new SlashCommandSubcommandBuilder()
+        .setDescription(`Configure ${description}`)
+        .addChannelOption(option => option
+            .setName(name)
+            .setDescription(description[0].toUpperCase() + description.slice(1))
+            .setRequired(true)
+        ),
+    moderatorOnly: true,
+    ownerOnly: true,
+    execute: async (interaction) => {
+        if (!interaction.inCachedGuild()) throw Error("Guild not cached.");
+
+        const channel = interaction.options.getChannel(name, true);
+        await BotConfig.upsert({
+            id: databaseId,
+            value: channel.id,
+            guild: interaction.guild.id,
+        });
+        await interaction.reply(`Successfully updated config for ${shortDescription} to ${channel}.`);
+    },
+});
+
 export default new Command({
     name: "config",
     builder: new SlashCommandBuilder()
@@ -19,52 +67,8 @@ export default new Command({
             moderatorOnly: true,
             ownerOnly: true,
             subcommands: [
-                new Subcommand({
-                    name: "role",
-                    builder: new SlashCommandSubcommandBuilder()
-                        .setDescription("Configure the role to grant users streaming")
-                        .addRoleOption(option => option
-                            .setName("role")
-                            .setDescription("The role to grant when a user is streaming")
-                            .setRequired(true)
-                        ),
-                    moderatorOnly: true,
-                    ownerOnly: true,
-                    execute: async (interaction) => {
-                        if (!interaction.inCachedGuild()) throw Error("Guild not cached.");
-
-                        const role = interaction.options.getRole("role", true);
-                        await BotConfig.upsert({
-                            id: "streamingRole",
-                            value: role.id,
-                            guild: interaction.guild.id,
-                        });
-                        await interaction.reply(`Successfully updated config for streaming role to ${role}.`);
-                    },
-                }),
-                new Subcommand({
-                    name: "channel",
-                    builder: new SlashCommandSubcommandBuilder()
-                        .setDescription("Configure the channel to post streams in")
-                        .addChannelOption(option => option
-                            .setName("channel")
-                            .setDescription("The channel to post streams in")
-                            .setRequired(true)
-                        ),
-                    moderatorOnly: true,
-                    ownerOnly: true,
-                    execute: async (interaction) => {
-                        if (!interaction.inCachedGuild()) throw Error("Guild not cached.");
-
-                        const channel = interaction.options.getChannel("channel", true);
-                        await BotConfig.upsert({
-                            id: "streamsChannel",
-                            value: channel.id,
-                            guild: interaction.guild.id,
-                        });
-                        await interaction.reply(`Successfully updated config for streams channel to ${channel}.`);
-                    },
-                }),
+                createRoleConfigSubcommand("role", "streamingRole", "the role to grant users streaming", "streaming role"),
+                createChannelConfigSubcommand("channel", "streamsChannel", "the channel to post streams in", "streams channel"),
             ],
         }),
         new SubcommandGroup({
@@ -73,29 +77,7 @@ export default new Command({
             moderatorOnly: true,
             ownerOnly: true,
             subcommands: [
-                new Subcommand({
-                    name: "role",
-                    builder: new SlashCommandSubcommandBuilder()
-                        .setDescription("Configure the role to check before executing moderator commands")
-                        .addRoleOption(option => option
-                            .setName("role")
-                            .setDescription("The role to check before executing moderator commands")
-                            .setRequired(true)
-                        ),
-                    moderatorOnly: true,
-                    ownerOnly: true,
-                    execute: async (interaction) => {
-                        if (!interaction.inCachedGuild()) throw Error("Guild not cached.");
-
-                        const role = interaction.options.getRole("role", true);
-                        await BotConfig.upsert({
-                            id: "moderatorRole",
-                            value: role.id,
-                            guild: interaction.guild.id,
-                        });
-                        await interaction.reply(`Successfully updated config for moderator role to ${role}.`);
-                    },
-                }),
+                createRoleConfigSubcommand("role", "moderatorRole", "the role to check before executing moderator commands", "moderator role"),
             ],
         }),
         new SubcommandGroup({
@@ -104,29 +86,7 @@ export default new Command({
             moderatorOnly: true,
             ownerOnly: true,
             subcommands: [
-                new Subcommand({
-                    name: "role",
-                    builder: new SlashCommandSubcommandBuilder()
-                        .setDescription("Configure the role to grant wiki contributors")
-                        .addRoleOption(option => option
-                            .setName("role")
-                            .setDescription("The role to grant wiki contributors")
-                            .setRequired(true)
-                        ),
-                    moderatorOnly: true,
-                    ownerOnly: true,
-                    execute: async (interaction) => {
-                        if (!interaction.inCachedGuild()) throw Error("Guild not cached.");
-
-                        const role = interaction.options.getRole("role", true);
-                        await BotConfig.upsert({
-                            id: "contributorRole",
-                            value: role.id,
-                            guild: interaction.guild.id,
-                        });
-                        await interaction.reply(`Successfully updated config for wiki contributor role to ${role}.`);
-                    },
-                }),
+                createRoleConfigSubcommand("role", "contributorRole", "the role to grant wiki contributors", "wiki contributor role"),
             ],
         }),
         new SubcommandGroup({
@@ -135,29 +95,7 @@ export default new Command({
             moderatorOnly: true,
             ownerOnly: true,
             subcommands: [
-                new Subcommand({
-                    name: "role",
-                    builder: new SlashCommandSubcommandBuilder()
-                        .setDescription("Configure the role to grant verified runners")
-                        .addRoleOption(option => option
-                            .setName("role")
-                            .setDescription("The role to grant verified runners")
-                            .setRequired(true)
-                        ),
-                    moderatorOnly: true,
-                    ownerOnly: true,
-                    execute: async (interaction) => {
-                        if (!interaction.inCachedGuild()) throw Error("Guild not cached.");
-
-                        const role = interaction.options.getRole("role", true);
-                        await BotConfig.upsert({
-                            id: "srcRole",
-                            value: role.id,
-                            guild: interaction.guild.id,
-                        });
-                        await interaction.reply(`Successfully updated config for SRC role to ${role}.`);
-                    },
-                }),
+                createRoleConfigSubcommand("role", "srcRole", "the role to grant verified runners", "SRC role"),
             ],
         }),
     ],

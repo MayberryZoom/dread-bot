@@ -5,14 +5,12 @@ const __dirname = import.meta.dirname;
 
 import { Activity, Collection, EmbedBuilder, Role, User } from "discord.js";
 
-import { ComponentManager } from "./component_manager";
-
 
 export type ConstructorFields<T> = Pick<T, keyof T>;
 
 export type CreateBuilderFunction<T> = (input?: unknown) => T;
 
-export type ExecuteInteractionFunction<T> = (interaction: T, manager: ComponentManager) => Promise<void>;
+export type ExecuteInteractionFunction<T> = (interaction: T) => Promise<void>;
 
 export interface NamedObject {
     name: string;

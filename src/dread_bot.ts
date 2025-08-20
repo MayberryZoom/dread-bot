@@ -1,40 +1,27 @@
-import { ActivityType, Client, Collection, Events, GatewayIntentBits, MessageFlags } from "discord.js";
+import { ActivityType, Events, GatewayIntentBits, MessageFlags } from "discord.js";
 
 import { BotConfigTable, StreamBlacklistTable } from "./databases/db_objects";
-import { Button } from "./lib/button";
-import { Command } from "./lib/command";
-import { ComponentManager } from "./lib/component_manager";
-import { UserContextMenu } from "./lib/context_menu";
-import { Modal } from "./lib/modal";
-import { SelectMenu } from "./lib/select_menu";
-import { buildComponentCollection, objectsArrayEquals, streamEmbed } from "./lib/utils";
+import { DreadClient } from "./lib/client";
+import { objectsArrayEquals, streamEmbed } from "./lib/utils";
 import registerCommands from "./register_commands";
 
 import { discordToken } from "../tokens.json";
 
 
 // Initialize client
-const dreadClient = new Client({
+const dreadClient = new DreadClient({
     intents: [ GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildPresences ],
     allowedMentions: { parse: ["users"], repliedUser: true },
     rest: { rejectOnRateLimit: ["/channels"] },
 });
+await dreadClient.init();
 
-const manager = new ComponentManager(
-    await buildComponentCollection<Command>("commands"),
-    await buildComponentCollection<UserContextMenu>("user_context_menus"),
-    await buildComponentCollection<Modal>("modals"),
-    await buildComponentCollection<Button>("buttons"),
-    await buildComponentCollection<SelectMenu>("select_menus"),
-    new Collection(),
-);
-
-registerCommands([...(manager.commands.map(c => c.builder.toJSON())), ...manager.userContextMenus.map(c => c.builder.toJSON())]);
+registerCommands([...(dreadClient.commands.map(c => c.builder.toJSON())), ...dreadClient.userContextMenus.map(c => c.builder.toJSON())]);
 
 // Interaction handler
 dreadClient.on(Events.InteractionCreate, async (interaction) => {
     if (interaction.isAutocomplete()) {
-        const command = manager.getCommand(interaction.commandName, interaction.options);
+        const command = dreadClient.getCommand(interaction.commandName, interaction.options);
         try {
             await command.autocomplete(interaction);
         }
@@ -43,9 +30,9 @@ dreadClient.on(Events.InteractionCreate, async (interaction) => {
         };
     }
     else {
-        const component = manager.getComponent(interaction);
+        const component = dreadClient.getComponent(interaction);
         try {
-            await component.execute(interaction, manager);
+            await component.execute(interaction);
         }
         catch(error) {
             console.error(error);

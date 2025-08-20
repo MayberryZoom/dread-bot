@@ -11,9 +11,9 @@ export default new UserContextMenu({
         .setDefaultMemberPermissions(PermissionFlagsBits.ViewAuditLog)
         .setContexts(InteractionContextType.Guild),
     moderatorOnly: true,
-    execute: async (interaction, manager) => {
-        const addRoleSelection = new ActionRowBuilder<SelectMenuBuilder>().addComponents(manager.createSelectMenu("addUserRolesSelection", interaction.targetUser.id));
-        const removeRoleSelection = new ActionRowBuilder<SelectMenuBuilder>().addComponents(manager.createSelectMenu("removeUserRolesSelection", interaction.targetUser.id));
+    execute: async (interaction) => {
+        const addRoleSelection = new ActionRowBuilder<SelectMenuBuilder>().addComponents(interaction.client.createSelectMenu("addUserRolesSelection", interaction.targetUser.id));
+        const removeRoleSelection = new ActionRowBuilder<SelectMenuBuilder>().addComponents(interaction.client.createSelectMenu("removeUserRolesSelection", interaction.targetUser.id));
 
         await interaction.reply({ content: `Select ${interaction.targetUser.toString()}'s roles.` , components: [addRoleSelection, removeRoleSelection], flags: MessageFlags.Ephemeral });
     },

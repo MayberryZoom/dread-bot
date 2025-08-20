@@ -1,6 +1,5 @@
 import { Interaction, MessageFlags, RepliableInteraction } from "discord.js";
 
-import { ComponentManager } from "./component_manager";
 import { ExecuteInteractionFunction } from "./utils";
 import { BotConfigTable } from "../databases/db_objects";
 
@@ -52,7 +51,7 @@ export abstract class ExecutableComponent extends BaseComponent {
         return true;
     }
 
-    public async execute(interaction: RepliableInteraction, manager: ComponentManager): Promise<void> {
-        if (this._execute && await this.canExecute(interaction)) await this._execute(interaction, manager);
+    public async execute(interaction: RepliableInteraction): Promise<void> {
+        if (this._execute && await this.canExecute(interaction)) await this._execute(interaction);
     }
 }

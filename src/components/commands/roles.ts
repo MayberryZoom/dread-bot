@@ -14,10 +14,10 @@ export default new Command({
             .setDescription("The user to update the roles of"))
         .setDescription("Sets a user's roles") as SlashCommandBuilder,
     moderatorOnly: true,
-    execute: async (interaction, manager) => {
+    execute: async (interaction) => {
         const user = interaction.options.getUser("user") || interaction.user;
-        const addRoleSelection = new ActionRowBuilder<SelectMenuBuilder>().addComponents(manager.createSelectMenu("addUserRolesSelection", user.id));
-        const removeRoleSelection = new ActionRowBuilder<SelectMenuBuilder>().addComponents(manager.createSelectMenu("removeUserRolesSelection", user.id));
+        const addRoleSelection = new ActionRowBuilder<SelectMenuBuilder>().addComponents(interaction.client.createSelectMenu("addUserRolesSelection", user.id));
+        const removeRoleSelection = new ActionRowBuilder<SelectMenuBuilder>().addComponents(interaction.client.createSelectMenu("removeUserRolesSelection", user.id));
 
         await interaction.reply({ content: "Select " + user.toString() + "'s roles." , components: [addRoleSelection, removeRoleSelection], flags: MessageFlags.Ephemeral });
     },

@@ -60,11 +60,11 @@ export default new Command({
                 .setDescription("Sets the channel's description")
                 .addChannelOption(channelOption),
             moderatorOnly: true,
-            execute: async (interaction, manager) => {
+            execute: async (interaction) => {
                 const channel = interaction.options.getChannel("channel", false, [ChannelType.GuildText]) || interaction.channel;
                 if (!channel || channel.isDMBased()) return;
 
-                interaction.showModal(manager.createModal("channelTopic", channel.id));
+                interaction.showModal(interaction.client.createModal("channelTopic", channel.id));
             },
         }),
     ]

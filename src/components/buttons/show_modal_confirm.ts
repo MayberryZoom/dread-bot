@@ -9,7 +9,7 @@ export default new Button({
         .setCustomId("showModalConfirm_" + modal)
         .setLabel("Confirm")
         .setStyle(ButtonStyle.Primary),
-    execute: async (interaction, manager) => {
-        await interaction.showModal(manager.createModal(interaction.customId.slice(17)));
+    execute: async (interaction) => {
+        await interaction.showModal(interaction.client.createModal(interaction.customId.slice(17)));
     }
 });

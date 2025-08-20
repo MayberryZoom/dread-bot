@@ -19,7 +19,7 @@ export default new Command({
         new Subcommand({
             name: "verify",
             builder: new SlashCommandSubcommandBuilder().setDescription("Verify your speedrun.com account"),
-            execute: async (interaction, manager) => {
+            execute: async (interaction) => {
                 if (!interaction.inCachedGuild()) return;
                 await interaction.guild.roles.fetch();
 
@@ -31,7 +31,7 @@ export default new Command({
                     return;
                 }
 
-                const buttonRow = new ActionRowBuilder<ButtonBuilder>().addComponents(manager.createButton("showModalConfirm", "srcApiKey"));
+                const buttonRow = new ActionRowBuilder<ButtonBuilder>().addComponents(interaction.client.createButton("showModalConfirm", "srcApiKey"));
                 interaction.reply({ content: apiKeyWarning, components: [buttonRow], flags: MessageFlags.Ephemeral });
             }
         })

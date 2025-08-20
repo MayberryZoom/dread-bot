@@ -204,7 +204,7 @@ export default new Command({
                 new Subcommand({
                     name: "link",
                     builder: new SlashCommandSubcommandBuilder().setDescription("Fetch page link").addStringOption(pageOption),
-                    execute: async (interaction, manager) => {
+                    execute: async (interaction) => {
                         if (!pagesIndex) throw Error("Error: Page Index undefined");
                         // Search page index and return if no page found
                         let page = pagesIndex.find(p => p.title.toLowerCase() === interaction.options.getString("page", true).toLowerCase());
@@ -215,7 +215,7 @@ export default new Command({
 
                         // Fetch page
                         const pageId = page.id;
-                        page = await fetchPage(pageId, manager.pageCache);
+                        page = await fetchPage(pageId, interaction.client.pageCache);
                         if (!page) return;
 
                         // Send reply
@@ -226,7 +226,7 @@ export default new Command({
                 new Subcommand({
                     name: "content",
                     builder: new SlashCommandSubcommandBuilder().setDescription("Fetch page content").addStringOption(pageOption),
-                    execute: async (interaction, manager) => {
+                    execute: async (interaction) => {
                         if (!pagesIndex) throw Error("Error: Page Index undefined");
                         // Search page index and return if no page found
                         let page = pagesIndex.find(p => p.title.toLowerCase() === interaction.options.getString("page", true).toLowerCase());
@@ -237,14 +237,14 @@ export default new Command({
 
                         // Fetch page
                         const pageId = page.id;
-                        page = await fetchPage(pageId, manager.pageCache);
+                        page = await fetchPage(pageId, interaction.client.pageCache);
 
                         // Construct embed
                         const toSend: InteractionReplyOptions = { embeds: [sectionToEmbed(page.content[0])] };
                         // If page has multiple sections, add buttons to tab through sections
                         if (page.content.length > 1) toSend.components = [new ActionRowBuilder<ButtonBuilder>().addComponents(
-                            manager.createButton("pageBack", pageId).setDisabled(true),
-                            manager.createButton("pageForward", pageId),
+                            interaction.client.createButton("pageBack", pageId).setDisabled(true),
+                            interaction.client.createButton("pageForward", pageId),
                         )];
 
                         // Send reply
